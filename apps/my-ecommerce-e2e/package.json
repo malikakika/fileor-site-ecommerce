@@ -1,0 +1,10 @@
+{
+  "name": "@my-ecommerce/my-ecommerce-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@my-ecommerce/my-ecommerce"
+    ]
+  }
+}
