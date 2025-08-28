@@ -1,0 +1,171 @@
+{
+  "home": {
+    "hero_title": "Handmade Brazilian Bracelets",
+    "hero_description": "Express your personality with a unique and colorful bracelet ",
+    "hero_subtext_en": "Let your colors and style speak ",
+    "personalize_button": "Customize my bracelet",
+    "section_title": "Our Best Sellers",
+    "why_choose": "Why Choose Us?",
+    "handmade": "Handmade",
+    "handmade_text": "Each bracelet is carefully handcrafted with love and passion.",
+    "unique": "Unique Pieces",
+    "unique_text": "No two bracelets are the same, each tells its own story.",
+    "community": "Community",
+    "community_text": "Join a community of style lovers and express yourself.",
+    "testimonials": "What Our Clients Say",
+    "testimonial1": "The bracelets are beautiful and the quality is amazing!",
+    "client1": "Salma, Casablanca",
+    "testimonial2": "I love the personalization, perfect as a gift.",
+    "client2": "Yassine, Rabat",
+    "cta_title": "Ready to create your unique bracelet?",
+    "cta_text": "Customize your jewelry and express your identity.",
+    "instagram_title": "Discover Our World",
+    "instagram_text": "Get inspired by our creations and share your style.",
+    "follow_instagram": "Follow on Instagram"
+  },
+  "bracelet": {
+    "sun": "Sun Bracelet",
+    "ocean": "Ocean Blue",
+    "forest": "Magic Forest"
+  },
+  "editor": {
+    "title": "Customize your bracelet",
+    "subtitle": "Write a message, draw on the canvas with the paint bucket tool, or do both, then send us your creation.",
+    "customMessage": "Custom message",
+    "messagePlaceholder": "Explain your idea, your favorite colors, or a word to be written...",
+    "drawTitle": "Draw your bracelet",
+    "examplesTitle": "Inspiring examples",
+    "exampleChevron": "Chevron",
+    "exampleLetterM": "Letter M",
+    "saveButton": "Save"
+  },
+  "design": {
+    "savedLog": "Design saved and sent to admin:",
+    "savedAlert": "Your design has been saved and sent!"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "customize": "Customize",
+    "products": "Our Products",
+    "brazilianBracelets": "Brazilian Bracelets",
+    "atebas": "Atebas",
+    "beadAccessories": "Bead Accessories",
+    "anklets": "Anklets"
+  },
+  "footer": {
+    "tagline": "Handmade Brazilian bracelets & accessories. Customize, get inspired, wear what reflects you.",
+    "products": "Products",
+    "links": "Useful links",
+    "contact": "Contact",
+    "city_country": "France, Europe",
+    "newsletter_placeholder": "Your email for updates…",
+    "subscribe": "Subscribe",
+    "newsletter_ok": "Thanks! You’re subscribed to our newsletter.",
+    "rights": "All rights reserved.",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "follow_us": "Follow us"
+  },
+
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Got a question, a bracelet idea, or a custom request? Write to us!",
+    "reachUs": "Get in touch",
+    "cityCountry": "France, Europe",
+    "hoursTitle": "Hours",
+    "hours": "Mon–Fri: 10am–6pm\nSat: 10am–2pm\nSun: closed",
+    "formTitle": "Send us a message",
+    "name": "Your name",
+    "email": "Your email",
+    "message": "Your message",
+    "send": "Send",
+    "thanks": "Thanks! We’ll get back to you shortly.",
+    "mapTitle": "Find us",
+    "mapPlaceholder": "Map coming soon",
+    "disclaimer": "Your information will only be used to answer your request. It will never be shared with third parties."
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Bracelets that tell a story — yours.",
+    "storyTitle": "Our story",
+    "story": "Fileor was born from a love of craft and color. Every bracelet is hand-woven with patience and passion to create a unique piece that reflects you. We believe in things that last, in details that spark joy, and in personalization as your true signature.",
+    "values": {
+      "craft": "Craftsmanship",
+      "craftDesc": "Hand-woven, neat finishing, carefully selected materials.",
+      "creativity": "Creativity",
+      "creativityDesc": "Inspiring patterns, a vibrant palette, custom ideas.",
+      "quality": "Quality",
+      "qualityDesc": "Durability, comfort, and a result faithful to your design."
+    },
+    "ctaTitle": "Want to see more?",
+    "ctaSubtitle": "Follow our creations and behind-the-scenes on Instagram.",
+    "follow": "Follow us"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty for now.",
+    "shopNow": "Shop now",
+    "total": "Total",
+    "clear": "Clear cart",
+    "checkout": "Checkout"
+  },
+  "products": {
+    "bracelets": "Brazilian Bracelets",
+    "atebas": "Atebas",
+    "beadAccessories": "Bead Accessories",
+    "anklets": "Anklets",
+    "addToCart": "Add to cart",
+    "soon": "Products coming soon "
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "View Profile",
+    "account": "My Account",
+    "admin": "Admin",
+    "loginTitle": "Login",
+    "email": "Email",
+    "password": "Password",
+    "loggingIn": "Logging in...",
+    "noAccount": "No account?",
+
+    "registerTitle": "Create an account",
+    "nameOptional": "Name (optional)",
+
+    "registering": "Registering...",
+    "registerSuccess": "Account created! Redirecting...",
+    "alreadyAccount": "Already have an account?",
+    "errors": {
+      "invalidCredentials": " Invalid email or password",
+      "generic": "Could not log in. Please try again later.",
+      "emailExists": "This email is already in use",
+      "genericRegister": "Could not create account. Please try again later."
+    }
+  },
+
+  "account": {
+    "title": "My account",
+    "loading": "Loading…",
+    "personalInfo": "Personal information",
+    "email": "Email",
+    "name": "Name",
+    "save": "Save",
+    "changePassword": "Change password",
+    "oldPassword": "Old password",
+    "newPassword": "New password",
+    "updatePassword": "Update password",
+    "success": {
+      "profileUpdated": "Profile updated ",
+      "passwordUpdated": "Password successfully changed "
+    },
+    "errors": {
+      "load": "Error loading your profile",
+      "profileUpdate": "Error updating profile",
+      "passwordUpdate": "Error changing password",
+      "oldPasswordIncorrect": "Old password is incorrect "
+    }
+  }
+}

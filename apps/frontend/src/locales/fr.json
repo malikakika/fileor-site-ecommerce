@@ -1,0 +1,167 @@
+{
+  "home": {
+    "hero_title": "Bracelets brésiliens faits main",
+    "hero_description": "Exprime ta personnalité avec un bracelet unique et coloré ",
+    "hero_subtext": "Laisse parler tes couleurs et ton style ",
+
+    "personalize_button": "Personnaliser mon bracelet",
+    "section_title": "Nos best-sellers",
+    "why_choose": "Pourquoi nous choisir ?",
+    "handmade": "Fait main",
+    "handmade_text": "Chaque bracelet est tissé à la main avec amour et passion.",
+    "unique": "Pièces uniques",
+    "unique_text": "Aucun bracelet n’est identique, chacun raconte une histoire.",
+    "community": "Communauté",
+    "community_text": "Rejoins une communauté de passionnés et exprime ton style.",
+    "testimonials": "Ce que disent nos clients",
+    "testimonial1": "Les bracelets sont magnifiques et la qualité est au rendez-vous !",
+    "client1": "Salma, Casablanca",
+    "testimonial2": "J’adore la personnalisation, parfait pour offrir.",
+    "client2": "Yassine, Rabat",
+    "cta_title": "Prêt à créer ton bracelet unique ?",
+    "cta_text": "Personnalise ton bijou et exprime ton identité.",
+    "instagram_title": "Découvre notre univers",
+    "instagram_text": "Inspire-toi de nos créations et partage ton style.",
+    "follow_instagram": "Suivre sur Instagram"
+  },
+
+  "bracelet": {
+    "sun": "Bracelet Soleil",
+    "ocean": "Océan Bleu",
+    "forest": "Forêt Magique"
+  },
+  "editor": {
+    "title": "Personnalise ton bracelet",
+    "subtitle": "Écris un message, dessine sur le canevas avec l’outil seau de couleur ou fais les deux, puis envoie-nous ta création.",
+    "customMessage": "Message personnalisé",
+    "messagePlaceholder": "Explique ton idée, tes couleurs préférées ou un mot à inscrire...",
+    "drawTitle": "Dessine ton bracelet",
+    "examplesTitle": "Exemples inspirants",
+    "exampleChevron": "Chevron",
+    "exampleLetterM": "Lettre M",
+    "saveButton": "Enregistrer"
+  },
+  "design": {
+    "savedLog": "Design enregistré et envoyé à l'admin :",
+    "savedAlert": "Votre design a été enregistré et envoyé !"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "customize": "Personnaliser",
+    "products": "Nos produits",
+    "brazilianBracelets": "Bracelets brésiliens",
+    "atebas": "Atebas",
+    "beadAccessories": "Accessoires en perles",
+    "anklets": "Bracelets de cheville"
+  },
+  "footer": {
+    "tagline": "Bracelets brésiliens & accessoires faits main. Personnalise, inspire-toi, porte ce qui te ressemble.",
+    "products": "Nos produits",
+    "links": "Liens utiles",
+    "contact": "Contact",
+    "city_country": "France, Europe",
+    "newsletter_placeholder": "Ton e-mail pour les nouveautés…",
+    "subscribe": "S’abonner",
+    "newsletter_ok": "Merci ! Tu es bien inscrit·e à notre newsletter.",
+    "rights": "Tous droits réservés.",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "follow_us": "Suivez-nous"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Une question, une idée de bracelet ou un projet sur-mesure ? Écris-nous !",
+    "reachUs": "Nous contacter",
+    "cityCountry": "France, Europe",
+    "hoursTitle": "Horaires",
+    "hours": "Lun–Ven : 10h–18h\nSam : 10h–14h\nDim : fermé",
+    "formTitle": "Écris-nous un message",
+    "name": "Ton nom",
+    "email": "Ton e-mail",
+    "message": "Ton message",
+    "send": "Envoyer",
+    "thanks": "Merci ! Nous revenons vers toi très vite.",
+    "mapTitle": "Nous trouver",
+    "mapPlaceholder": "Carte à venir",
+    "disclaimer": "Vos informations ne seront utilisées que pour répondre à votre demande. Elles ne seront jamais partagées avec des tiers."
+  },
+  "about": {
+    "title": "À propos",
+    "subtitle": "Des bracelets qui racontent une histoire : la tienne.",
+    "storyTitle": "Notre histoire",
+    "story": "Fileor est né d’un amour pour l’artisanat et la couleur. Chaque bracelet est tissé à la main, avec patience et passion, pour créer une pièce unique qui te ressemble. Nous croyons aux objets qui durent, au détail qui fait sourire, et à la personnalisation comme vraie signature.",
+    "values": {
+      "craft": "Artisanat",
+      "craftDesc": "Tissage à la main, finitions soignées, matériaux choisis.",
+      "creativity": "Créativité",
+      "creativityDesc": "Des motifs inspirés, une palette vibrante, des idées sur-mesure.",
+      "quality": "Qualité",
+      "qualityDesc": "Durabilité, confort et rendu fidèle à ton design."
+    },
+    "ctaTitle": "Envie d’en voir plus ?",
+    "ctaSubtitle": "Suis nos créations et coulisses sur Instagram.",
+    "follow": "Nous suivre"
+  },
+  "cart": {
+    "title": "Mon panier",
+    "empty": "Ton panier est vide pour l’instant.",
+    "shopNow": " Découvrir nos produits",
+    "total": "Total",
+    "clear": "Vider le panier",
+    "checkout": "Passer à la caisse"
+  },
+  "products": {
+    "bracelets": "Bracelets brésiliens",
+    "atebas": "Atebas",
+    "beadAccessories": "Accessoires en perles",
+    "anklets": "Chaînes de cheville",
+    "addToCart": "Ajouter au panier",
+    "soon": "Produits bientôt disponibles "
+  },
+  "auth": {
+    "registerTitle": "Créer un compte",
+    "nameOptional": "Nom (optionnel)",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "register": "Créer mon compte",
+    "registering": "Création...",
+    "alreadyAccount": "Déjà inscrit ?",
+    "login": "Se connecter",
+    "errors": {
+      "passwordMismatch": " Les mots de passe ne correspondent pas",
+      "emailInUse": "Cet email est déjà utilisé",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+      "validation": "Veuillez vérifier le formulaire",
+      "generic": "Une erreur est survenue, réessayez"
+    },
+    "success": {
+      "register": "Compte créé ! Redirection..."
+    }
+  },
+
+  "account": {
+    "title": "Mon compte",
+    "loading": "Chargement…",
+    "personalInfo": "Informations personnelles",
+    "email": "Email",
+    "name": "Nom",
+    "save": "Enregistrer",
+    "changePassword": "Changer le mot de passe",
+    "oldPassword": "Ancien mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "updatePassword": "Mettre à jour le mot de passe",
+    "success": {
+      "profileUpdated": "Profil mis à jour ",
+      "passwordUpdated": "Mot de passe modifié avec succès "
+    },
+    "errors": {
+      "load": "Erreur lors du chargement de votre profil",
+      "profileUpdate": "Erreur lors de la mise à jour du profil",
+      "passwordUpdate": "Erreur lors du changement de mot de passe",
+      "oldPasswordIncorrect": "Ancien mot de passe incorrect "
+    }
+  }
+}
