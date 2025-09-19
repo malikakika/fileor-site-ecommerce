@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  postgres_fileor:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fileor_db
+      POSTGRES_USER: fileor_user
+      POSTGRES_PASSWORD: strong_password
+    volumes:
+      - pgdata_fileor:/var/lib/postgresql/data
+    networks: [fileor_net]
+
+  api_fileor:
+    build:
+      context: .              
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    env_file:
+      - ./apps/backend/.env   
+    depends_on:
+      - postgres_fileor
+    ports:
+      - "127.0.0.1:4005:3000"
+    networks: [fileor_net]
+
+  front_fileor:
+    build:
+      context: .        
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3005:80"
+    networks: [fileor_net]
+
+volumes:
+  pgdata_fileor:
+
+networks:
+  fileor_net:
+    driver: bridge

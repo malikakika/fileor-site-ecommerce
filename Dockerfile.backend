@@ -1,0 +1,27 @@
+FROM node:20-alpine AS build
+WORKDIR /repo
+
+# copie les manifestes du monorepo
+COPY package*.json ./
+
+# copie aussi ceux du backend
+COPY apps/backend/package*.json ./apps/backend/
+
+# installe toutes les dépendances (root + backend)
+RUN npm ci
+
+# copie le reste du code
+COPY . .
+
+# build du backend
+RUN npx nx build backend --configuration=production
+
+# ---- runtime ----
+FROM node:20-alpine
+WORKDIR /app
+
+# copie uniquement le dist compilé
+COPY --from=build /repo/dist/apps/backend ./
+
+EXPOSE 3000
+CMD ["node", "main.js"]
