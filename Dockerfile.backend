@@ -20,8 +20,9 @@ RUN npx nx build backend --configuration=production
 FROM node:20-alpine
 WORKDIR /app
 
-# copie uniquement le dist compilé
-COPY --from=build /repo/dist/apps/backend ./
+# le bon répertoire de sortie est apps/backend/dist
+COPY --from=build /repo/apps/backend/dist ./
 
 EXPOSE 3000
 CMD ["node", "main.js"]
+
