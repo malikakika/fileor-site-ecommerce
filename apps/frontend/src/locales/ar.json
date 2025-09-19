@@ -2,7 +2,7 @@
   "home": {
     "hero_title": "أساور برازيلية مصنوعة يدويًا",
     "hero_description": "عبّر عن شخصيتك بسوار فريد وملون ",
-    "hero_subtext_ar": "دع ألوانك وأسلوبك يتحدثان ",
+    "hero_subtext": "دع ألوانك وأسلوبك يتحدثان ",
     "personalize_button": " خصص سوارك",
     "section_title": "الأكثر مبيعاً",
     "why_choose": "لماذا نحن ؟",
@@ -103,12 +103,23 @@
     "follow": "تابعنا"
   },
   "cart": {
-    "title": "سلتي",
-    "empty": "سلتك فارغة حالياً.",
-    "shopNow": " تسوق الآن",
-    "total": "المجموع",
-    "clear": "إفراغ السلة",
-    "checkout": "إتمام الشراء"
+    "title": "سلة التسوق",
+    "empty": "سلتك فارغة.",
+    "shopNow": "تسوق الآن",
+    "product": "المنتج",
+    "price": "السعر",
+    "quantity": "الكمية",
+    "subtotal": "المجموع الفرعي",
+    "removeItem": "إزالة",
+    "itemsCount_zero": "عدد العناصر: 0",
+    "itemsCount_one": "عنصر: {{count}}",
+    "itemsCount_two": "عنصران: {{count}}",
+    "itemsCount_few": "عناصر: {{count}}",
+    "itemsCount_many": "عناصر: {{count}}",
+    "itemsCount_other": "عناصر: {{count}}",
+    "total": "الإجمالي",
+    "clear": "تفريغ",
+    "checkout": "الدفع"
   },
   "products": {
     "bracelets": "أساور برازيلية",
@@ -116,6 +127,36 @@
     "beadAccessories": "إكسسوارات خرز",
     "anklets": "سلاسل كاحل",
     "addToCart": "أضف إلى السلة",
-    "soon": "منتجات قادمة قريباً "
-  }
+    "soon": "منتجات قادمة قريباً ",
+      "title": "المنتجات",
+    "search": "ابحث...",
+    "allCategories": "جميع الفئات",
+    "empty": "لا توجد منتجات."
+  },
+  "auth": {
+  "registerTitle": "إنشاء حساب",
+  "nameOptional": "الاسم (اختياري)",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "register": "إنشاء حسابي",
+  "registering": "جاري الإنشاء...",
+  "alreadyAccount": "لديك حساب بالفعل؟",
+  "login": "تسجيل الدخول",
+  "errors": {
+    "passwordMismatch": "كلمتا المرور غير متطابقتين",
+    "emailInUse": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "validation": "يرجى التحقق من النموذج",
+    "generic": "حدث خطأ ما، حاول مرة أخرى"
+  },
+  "success": {
+    "register": "تم إنشاء الحساب! سيتم تحويلك..."
+  },
+  "profile": "الملف الشخصي",
+  "admin": "الإدارة",
+    "logout": "تسجيل الخروج"
+
+}
+
 }

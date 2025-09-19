@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import { Product } from './app/products/product.entity';
 import { Category } from './app/categories/category.entity';
 import { User } from './app/users/user.entity';
+import { Order } from './app/orders/order.entity';
 
 config();
 
@@ -17,12 +18,12 @@ console.log('📡 DB CONFIG ->', {
 
 export const ormConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'localhost', 
   port: parseInt(process.env.DB_PORT || '5433', 10),
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'myecom',
-  entities: [Product, Category, User],
+  entities: [Product, Category, User, Order],
   synchronize: true,
   logging: true,
 };

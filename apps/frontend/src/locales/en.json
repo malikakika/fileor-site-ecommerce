@@ -2,7 +2,7 @@
   "home": {
     "hero_title": "Handmade Brazilian Bracelets",
     "hero_description": "Express your personality with a unique and colorful bracelet ",
-    "hero_subtext_en": "Let your colors and style speak ",
+    "hero_subtext": "Let your colors and style speak ",
     "personalize_button": "Customize my bracelet",
     "section_title": "Our Best Sellers",
     "why_choose": "Why Choose Us?",
@@ -29,19 +29,55 @@
     "forest": "Magic Forest"
   },
   "editor": {
-    "title": "Customize your bracelet",
-    "subtitle": "Write a message, draw on the canvas with the paint bucket tool, or do both, then send us your creation.",
-    "customMessage": "Custom message",
-    "messagePlaceholder": "Explain your idea, your favorite colors, or a word to be written...",
-    "drawTitle": "Draw your bracelet",
-    "examplesTitle": "Inspiring examples",
-    "exampleChevron": "Chevron",
-    "exampleLetterM": "Letter M",
-    "saveButton": "Save"
+    "heroTitle": "Create your custom design",
+    "heroSubtitle": "Sketch an idea with our tools or upload an example. We’ll get back to you quickly with a quote.",
+    "quoteBannerTitle": "How it works",
+    "quoteBannerText": "Sketch your idea or add a reference image. We send it to our team who will contact you (email/phone) with a quote and timeline.",
+    "uploadExample": "Add a reference image",
+    "uploadExampleHelp": "Photo, sketch, mockup… anything that helps us understand what you want.",
+    "uploading": "Uploading…",
+    "chooseFile": "Choose an image",
+    "preview": "Preview",
+    "uploadError": "Upload failed. Please try again.",
+    "saveError": "Couldn’t save your design. Please try again.",
+    "toolSelect": "Select",
+    "toolPaint": "Bucket fill",
+    "toolBrush": "Brush",
+    "toolRect": "Rectangle",
+    "toolCircle": "Circle",
+    "toolTriangle": "Triangle",
+    "hideGrid": "Hide grid",
+    "showGrid": "Show grid",
+    "brushWidth": "Brush width",
+    "shapeStrokeWidth": "Stroke width",
+    "colorActive": "Active color (brush/text)",
+    "colorStroke": "Stroke color",
+    "colorFill": "Fill color",
+    "delete": "Delete",
+    "clear": "Clear all",
+    "save": "Send",
+    "messagePlaceholder": "Tell us what you need (sizes, colors, text, details…)…",
+    "quoteDialogTitle": "Design sent to our team",
+    "quoteDialogBody": "Thanks 🙌 Your design (and any reference image) have been sent. Our team will contact you very soon with a quote and a delivery timeline.",
+    "quoteDialogClose": "Got it",
+    "close": "Close"
   },
   "design": {
     "savedLog": "Design saved and sent to admin:",
     "savedAlert": "Your design has been saved and sent!"
+  },
+  "designs": {
+    "sectionTitle": "Custom designs",
+    "refresh": "Refresh",
+    "loading": "...",
+    "user": "User",
+    "showDesign": "View design in large",
+    "showExample": "View example image in large",
+    "design": "Design",
+    "exampleImage": "Example image",
+    "noImage": "(no image)",
+    "empty": "No designs.",
+    "close": "Close"
   },
   "nav": {
     "home": "Home",
@@ -107,8 +143,15 @@
     "title": "My Cart",
     "empty": "Your cart is empty for now.",
     "shopNow": "Shop now",
+    "product": "Product",
+    "price": "Price",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "removeItem": "Remove",
+    "itemsCount_one": "Item: {{count}}",
+    "itemsCount_other": "Items: {{count}}",
     "total": "Total",
-    "clear": "Clear cart",
+    "clear": "Clear",
     "checkout": "Checkout"
   },
   "products": {
@@ -117,7 +160,11 @@
     "beadAccessories": "Bead Accessories",
     "anklets": "Anklets",
     "addToCart": "Add to cart",
-    "soon": "Products coming soon "
+    "soon": "Products coming soon ",
+    "title": "Products",
+    "search": "Search...",
+    "allCategories": "All categories",
+    "empty": "No products found."
   },
   "auth": {
     "login": "Login",
@@ -143,7 +190,11 @@
       "generic": "Could not log in. Please try again later.",
       "emailExists": "This email is already in use",
       "genericRegister": "Could not create account. Please try again later."
-    }
+    },
+    "requiredTitle": "Sign in required",
+    "requiredMessage": "You need to sign in to add items to your cart and checkout.",
+    "goLogin": "Sign in",
+    "later": "Later"
   },
 
   "account": {
@@ -166,6 +217,82 @@
       "profileUpdate": "Error updating profile",
       "passwordUpdate": "Error changing password",
       "oldPasswordIncorrect": "Old password is incorrect "
+    }
+  },
+  "cod": {
+    "title": "Cash on Delivery",
+    "fullName": "Full name",
+    "fullNamePh": "e.g., Malika CHOUBRI",
+    "phone": "Phone",
+    "phonePh": "e.g., +212 6 XX XX XX XX",
+    "address": "Address",
+    "addressPh": "Street, number, details",
+    "city": "City",
+    "cityPh": "e.g., Casablanca",
+    "note": "Notes (optional)",
+    "notePh": "e.g., Ring at door 3",
+    "confirm": "Confirm order",
+    "processing": "Processing...",
+    "backToCart": "Back to cart",
+    "summary": "Order summary",
+    "total": "Total",
+    "codNote": "You will pay the exact amount in cash upon delivery.",
+    "thanksTitle": "Thank you for your order!",
+    "thanksSubtitle": "We’ll contact you to confirm delivery.",
+    "orderRef": "Reference",
+    "continueShopping": "Continue shopping",
+    "errors": {
+      "validation": "Please check the form.",
+      "generic": "An error occurred, please try again."
+    }
+  },
+
+  "adminOrders": {
+    "title": "Orders",
+    "filterLabel": "Filter by status",
+    "refresh": "Refresh",
+
+    "status": {
+      "ALL": "All statuses",
+      "PENDING_PAYMENT": "Pending (COD)",
+      "PAID": "Paid",
+      "CONFIRMED": "Confirmed",
+      "PROCESSING": "Processing",
+      "DELIVERED": "Delivered"
+    },
+
+    "summary": {
+      "count": "Orders total",
+      "revenue": "Total revenue"
+    },
+
+    "empty": "No orders.",
+
+    "table": {
+      "date": "Date",
+      "customer": "Customer",
+      "contact": "Contact",
+      "address": "Address",
+      "payment": "Payment",
+      "status": "Status",
+      "total": "Total",
+      "details": "Details",
+      "hide": "Hide"
+    },
+
+    "details": {
+      "items": "Items",
+      "product": "Product",
+      "qty": "Qty",
+      "unitPrice": "Unit price",
+      "subtotal": "Subtotal"
+    },
+
+    "paymentMethod": {
+      "COD": "Cash on delivery",
+      "CARD": "Card",
+      "BANK_TRANSFER": "Bank transfer",
+      "STRIPE": "Card (Stripe)"
     }
   }
 }

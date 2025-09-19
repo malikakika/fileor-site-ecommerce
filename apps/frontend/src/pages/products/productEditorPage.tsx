@@ -24,10 +24,14 @@ import {
   Trash2,
   PaintBucket,
   Type as TypeIcon,
+  X as XIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
-import { uploadProductImage } from '../../services/uploads.service';
+import {
+  ensureDisplayUrl,
+  uploadProductImage,
+} from '../../services/uploads.service';
 import { designsService } from '../../services/designs.service';
 
 const GRID_WIDTH = 24;
@@ -97,6 +101,23 @@ export default function ProductEditorPage() {
 
   const [message, setMessage] = useState<string>('');
   const [tool, setTool] = useState<Tool>('paint');
+  const [exampleImage, setExampleImage] = useState<string | null>(null);
+  const [exampleUploading, setExampleUploading] = useState(false);
+  const [showSentModal, setShowSentModal] = useState(false);
+
+  const handleExampleUpload = async (file: File) => {
+    try {
+      setExampleUploading(true);
+      const { path } = await uploadProductImage(file);
+      const url = await ensureDisplayUrl(path);
+      setExampleImage(url);
+    } catch (e) {
+      console.error(e);
+      alert(t('editor.uploadError'));
+    } finally {
+      setExampleUploading(false);
+    }
+  };
 
   // Couleurs
   const [activeColor, setActiveColor] = useState('#FF8C42');
@@ -117,7 +138,6 @@ export default function ProductEditorPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  // Édition inline du texte
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState<string>('');
   const [editorPos, setEditorPos] = useState<{
@@ -205,38 +225,34 @@ export default function ProductEditorPage() {
     const stage = stageRef.current;
     if (!stage) return;
 
-    // masquer le Transformer
     const tr = trRef.current as any | null;
     const backup = tr ? tr.nodes() : null;
     if (tr) tr.nodes([]);
     await new Promise((r) => requestAnimationFrame(r));
     stage.draw();
 
-    // 1) export en PNG
     const dataURL = stage.toDataURL({
       pixelRatio: 2,
       mimeType: 'image/png',
       quality: 1,
     });
 
-    // 2) convertir en File
     const file = dataUrlToFile(dataURL, `design-${uuidv4()}.png`);
 
     try {
-      // 3) upload Supabase via ton endpoint
-      const { path } = await uploadProductImage(file); // ex: "public/<random>.png"
+      const { path } = await uploadProductImage(file);
 
-      // 4) créer l'enregistrement "design"
       await designsService.create({
         message: message?.trim() || null,
-        imagePath: path, // on stocke le chemin, pas l’URL signée
-        scene: snapshot(), // facultatif si trop gros
+        imagePath: path,
+        scene: snapshot(),
+        exampleImage: exampleImage,
       });
 
-      alert(t('design.savedAlert'));
+      setShowSentModal(true);
     } catch (e) {
       console.error(e);
-      alert('Erreur: impossible d’enregistrer le design');
+      alert(t('editor.saveError') || 'Erreur: impossible d’enregistrer le design');
     } finally {
       if (tr && backup) {
         tr.nodes(backup);
@@ -244,6 +260,7 @@ export default function ProductEditorPage() {
       }
     }
   };
+
   const getPointerPos = () =>
     stageRef.current?.getPointerPosition() as
       | { x: number; y: number }
@@ -254,7 +271,6 @@ export default function ProductEditorPage() {
     const pos = getPointerPos();
     if (!pos) return;
 
-    // Texte : un clic ajoute UNE entrée puis repasse en select
     if (tool === 'text') {
       const id = uuidv4();
       const txt: TextShape = {
@@ -418,12 +434,10 @@ export default function ProductEditorPage() {
     }
   };
 
-  // === Interactions éléments ===
   const onShapeClick = (e: any, id: string, shape?: AnyShape) => {
     e.cancelBubble = true;
 
     if (tool === 'paint') {
-      // Seau : remplit la forme
       setShapes((prev) =>
         prev.map((s) =>
           s.id === id ? ({ ...s, fill: activeColor } as AnyShape) : s
@@ -503,7 +517,21 @@ export default function ProductEditorPage() {
 
   return (
     <div className="min-h-screen bg-sand text-ink">
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
+      <div className="bg-gradient-to-r from-sunset to-berry text-white py-12 px-4 mb-6 shadow-md">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">{t('editor.heroTitle')}</h1>
+          <p className="text-lg opacity-90">{t('editor.heroSubtitle')}</p>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-3 mb-4">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 text-amber-900 p-3">
+          <div className="font-semibold">{t('editor.quoteBannerTitle')}</div>
+          <div className="text-sm opacity-90">{t('editor.quoteBannerText')}</div>
+        </div>
+      </div>
+
+      <div className="sticky top-0 z-10 backdrop-blur bg-white/70 border-b">
         <div className="max-w-6xl mx-auto px-3 py-2 flex flex-wrap items-center gap-2">
           <IconToggle
             active={tool === 'select'}
@@ -565,17 +593,17 @@ export default function ProductEditorPage() {
           <ColorIcon
             color={activeColor}
             onChange={setActiveColor}
-            title="Active color (brush/bucket/text)"
+            title={t('editor.colorActive')}
           />
           <ColorIcon
             color={strokeColor}
             onChange={setStrokeColor}
-            title="Shape stroke"
+            title={t('editor.colorStroke')}
           />
           <ColorIcon
             color={fillColor}
             onChange={setFillColor}
-            title="Shape fill (default)"
+            title={t('editor.colorFill')}
           />
 
           {tool === 'brush' && (
@@ -611,7 +639,7 @@ export default function ProductEditorPage() {
             <IconBtn onClick={handleRedo} title="Redo">
               <Redo size={18} />
             </IconBtn>
-            <IconBtn onClick={handleClear} title="Clear">
+            <IconBtn onClick={handleClear} title={t('editor.clear')}>
               <Eraser size={18} />
             </IconBtn>
             <IconBtn
@@ -621,7 +649,7 @@ export default function ProductEditorPage() {
             >
               <Trash2 size={18} />
             </IconBtn>
-            <IconBtn onClick={handleSave} title="Save">
+            <IconBtn onClick={handleSave} title={t('editor.save')}>
               <Save size={18} />
             </IconBtn>
           </div>
@@ -637,7 +665,7 @@ export default function ProductEditorPage() {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-3 pb-8">
+=      <div className="max-w-6xl mx-auto px-3 pb-8">
         <div ref={stageWrapRef} className="relative">
           {editingTextId && (
             <textarea
@@ -671,280 +699,359 @@ export default function ProductEditorPage() {
             />
           )}
 
-          <div className="flex justify-center overflow-auto border shadow rounded-lg bg-gray-50 p-2">
-            <Stage
-              ref={stageRef}
-              width={GRID_WIDTH * CELL_SIZE}
-              height={GRID_HEIGHT * CELL_SIZE}
-              onPointerDown={(e) => {
-                const clickedBg = e.target === e.target.getStage();
-                if (clickedBg) setSelectedId(null);
-                if (tool !== 'select') onMouseDown();
-              }}
-              onPointerMove={onMouseMove}
-              onPointerUp={onMouseUp}
-            >
-              <Layer>
-                <Rect
-                  x={0}
-                  y={0}
-                  width={GRID_WIDTH * CELL_SIZE}
-                  height={GRID_HEIGHT * CELL_SIZE}
-                  fill="#ffffff"
-                />
-              </Layer>
-
-              {showGrid && (
-                <Layer listening={tool === 'paint'}>
-                  {grid.map((row, ri) =>
-                    row.map((color, ci) => (
+          <div className="max-w-6xl mx-auto px-3 pb-8">
+            <div className="flex flex-col lg:flex-row gap-6 items-start">
+              <div className="shrink-0">
+                <div className="flex justify-center overflow-auto border shadow rounded-lg bg-gray-50 p-2">
+                  <Stage
+                    ref={stageRef}
+                    width={GRID_WIDTH * CELL_SIZE}
+                    height={GRID_HEIGHT * CELL_SIZE}
+                    onPointerDown={(e) => {
+                      const clickedBg = e.target === e.target.getStage();
+                      if (clickedBg) setSelectedId(null);
+                      if (tool !== 'select') onMouseDown();
+                    }}
+                    onPointerMove={onMouseMove}
+                    onPointerUp={onMouseUp}
+                  >
+                    <Layer>
                       <Rect
-                        key={`${ri}-${ci}`}
-                        x={ci * CELL_SIZE}
-                        y={ri * CELL_SIZE}
-                        width={CELL_SIZE}
-                        height={CELL_SIZE}
-                        fill={color}
-                        stroke="#ddd"
-                        onClick={() => handleGridPaint(ri, ci)}
+                        x={0}
+                        y={0}
+                        width={GRID_WIDTH * CELL_SIZE}
+                        height={GRID_HEIGHT * CELL_SIZE}
+                        fill="#ffffff"
                       />
-                    ))
-                  )}
-                </Layer>
-              )}
+                    </Layer>
 
-              <Layer>
-                {shapes.map((shape) => {
-                  const isSelected = selectedId === shape.id;
+                    {showGrid && (
+                      <Layer listening={tool === 'paint'}>
+                        {grid.map((row, ri) =>
+                          row.map((color, ci) => (
+                            <Rect
+                              key={`${ri}-${ci}`}
+                              x={ci * CELL_SIZE}
+                              y={ri * CELL_SIZE}
+                              width={CELL_SIZE}
+                              height={CELL_SIZE}
+                              fill={color}
+                              stroke="#ddd"
+                              onClick={() => handleGridPaint(ri, ci)}
+                            />
+                          ))
+                        )}
+                      </Layer>
+                    )}
 
-                  if (shape.type === 'rect') {
-                    return (
-                      <Rect
-                        key={shape.id}
-                        id={shape.id}
-                        x={shape.x}
-                        y={shape.y}
-                        width={shape.width}
-                        height={shape.height}
-                        rotation={shape.rotation ?? 0}
-                        stroke={shape.stroke}
-                        strokeWidth={shape.strokeWidth}
-                        fill={shape.fill}
-                        draggable
-                        hitStrokeWidth={10}
-                        onClick={(e) => onShapeClick(e, shape.id, shape)}
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        onDblClick={(e) => {}}
-                        onDragEnd={() => pushHistory(snapshot())}
-                        onTransformEnd={(e) => {
-                          const node = e.target as any;
-                          const sx = node.scaleX(),
-                            sy = node.scaleY();
-                          node.scaleX(1);
-                          node.scaleY(1);
-                          setShapes((prev) =>
-                            prev.map((s) =>
-                              s.id === shape.id
-                                ? {
-                                    ...(s as RectShape),
-                                    x: node.x(),
-                                    y: node.y(),
-                                    width: Math.max(
-                                      5,
-                                      (s as RectShape).width * sx
-                                    ),
-                                    height: Math.max(
-                                      5,
-                                      (s as RectShape).height * sy
-                                    ),
-                                    rotation: node.rotation(),
-                                  }
-                                : s
-                            )
+                    <Layer>
+                      {shapes.map((shape) => {
+                        const isSelected = selectedId === shape.id;
+
+                        if (shape.type === 'rect') {
+                          return (
+                            <Rect
+                              key={shape.id}
+                              id={shape.id}
+                              x={shape.x}
+                              y={shape.y}
+                              width={shape.width}
+                              height={shape.height}
+                              rotation={shape.rotation ?? 0}
+                              stroke={shape.stroke}
+                              strokeWidth={shape.strokeWidth}
+                              fill={shape.fill}
+                              draggable
+                              hitStrokeWidth={10}
+                              onClick={(e) => onShapeClick(e, shape.id, shape)}
+                              onDragEnd={() => pushHistory(snapshot())}
+                              onTransformEnd={(e) => {
+                                const node = e.target as any;
+                                const sx = node.scaleX(),
+                                  sy = node.scaleY();
+                                node.scaleX(1);
+                                node.scaleY(1);
+                                setShapes((prev) =>
+                                  prev.map((s) =>
+                                    s.id === shape.id
+                                      ? {
+                                          ...(s as RectShape),
+                                          x: node.x(),
+                                          y: node.y(),
+                                          width: Math.max(
+                                            5,
+                                            (s as RectShape).width * sx
+                                          ),
+                                          height: Math.max(
+                                            5,
+                                            (s as RectShape).height * sy
+                                          ),
+                                          rotation: node.rotation(),
+                                        }
+                                      : s
+                                  )
+                                );
+                                pushHistory(snapshot());
+                              }}
+                              ref={(n) => {
+                                if (isSelected)
+                                  selectedNodeRef.current = n;
+                              }}
+                            />
                           );
-                          pushHistory(snapshot());
-                        }}
-                        ref={(n) => {
-                          if (isSelected) selectedNodeRef.current = n;
-                        }}
-                      />
-                    );
-                  }
+                        }
 
-                  if (shape.type === 'circle') {
-                    return (
-                      <Circle
-                        key={shape.id}
-                        id={shape.id}
-                        x={shape.x}
-                        y={shape.y}
-                        radius={(shape as CircleShape).radius}
-                        rotation={shape.rotation ?? 0}
-                        stroke={shape.stroke}
-                        strokeWidth={shape.strokeWidth}
-                        fill={shape.fill}
-                        draggable
-                        hitStrokeWidth={10}
-                        onClick={(e) => onShapeClick(e, shape.id, shape)}
-                        onDragEnd={() => pushHistory(snapshot())}
-                        onTransformEnd={(e) => {
-                          const node = e.target as any;
-                          const sx = node.scaleX();
-                          node.scaleX(1);
-                          node.scaleY(1);
-                          setShapes((prev) =>
-                            prev.map((s) =>
-                              s.id === shape.id
-                                ? {
-                                    ...(s as CircleShape),
-                                    x: node.x(),
-                                    y: node.y(),
-                                    radius: Math.max(
-                                      3,
-                                      (s as CircleShape).radius * sx
-                                    ),
-                                    rotation: node.rotation(),
-                                  }
-                                : s
-                            )
+                        if (shape.type === 'circle') {
+                          return (
+                            <Circle
+                              key={shape.id}
+                              id={shape.id}
+                              x={shape.x}
+                              y={shape.y}
+                              radius={(shape as CircleShape).radius}
+                              rotation={shape.rotation ?? 0}
+                              stroke={shape.stroke}
+                              strokeWidth={shape.strokeWidth}
+                              fill={shape.fill}
+                              draggable
+                              hitStrokeWidth={10}
+                              onClick={(e) => onShapeClick(e, shape.id, shape)}
+                              onDragEnd={() => pushHistory(snapshot())}
+                              onTransformEnd={(e) => {
+                                const node = e.target as any;
+                                const sx = node.scaleX();
+                                node.scaleX(1);
+                                node.scaleY(1);
+                                setShapes((prev) =>
+                                  prev.map((s) =>
+                                    s.id === shape.id
+                                      ? {
+                                          ...(s as CircleShape),
+                                          x: node.x(),
+                                          y: node.y(),
+                                          radius: Math.max(
+                                            3,
+                                            (s as CircleShape).radius * sx
+                                          ),
+                                          rotation: node.rotation(),
+                                        }
+                                      : s
+                                  )
+                                );
+                                pushHistory(snapshot());
+                              }}
+                              ref={(n) => {
+                                if (isSelected)
+                                  selectedNodeRef.current = n;
+                              }}
+                            />
                           );
-                          pushHistory(snapshot());
-                        }}
-                        ref={(n) => {
-                          if (isSelected) selectedNodeRef.current = n;
-                        }}
-                      />
-                    );
-                  }
+                        }
 
-                  if (shape.type === 'triangle') {
-                    return (
-                      <RegularPolygon
-                        key={shape.id}
-                        id={shape.id}
-                        x={(shape as TriangleShape).x}
-                        y={(shape as TriangleShape).y}
-                        sides={3}
-                        radius={(shape as TriangleShape).radius}
-                        rotation={shape.rotation ?? 0}
-                        stroke={shape.stroke}
-                        strokeWidth={shape.strokeWidth}
-                        fill={shape.fill}
-                        draggable
-                        hitStrokeWidth={10}
-                        onClick={(e) => onShapeClick(e, shape.id, shape)}
-                        onDragEnd={() => pushHistory(snapshot())}
-                        onTransformEnd={(e) => {
-                          const node = e.target as any;
-                          const sx = node.scaleX();
-                          node.scaleX(1);
-                          node.scaleY(1);
-                          setShapes((prev) =>
-                            prev.map((s) =>
-                              s.id === shape.id
-                                ? {
-                                    ...(s as TriangleShape),
-                                    x: node.x(),
-                                    y: node.y(),
-                                    radius: Math.max(
-                                      4,
-                                      (s as TriangleShape).radius * sx
-                                    ),
-                                    rotation: node.rotation(),
-                                  }
-                                : s
-                            )
+                        if (shape.type === 'triangle') {
+                          return (
+                            <RegularPolygon
+                              key={shape.id}
+                              id={shape.id}
+                              x={(shape as TriangleShape).x}
+                              y={(shape as TriangleShape).y}
+                              sides={3}
+                              radius={(shape as TriangleShape).radius}
+                              rotation={shape.rotation ?? 0}
+                              stroke={shape.stroke}
+                              strokeWidth={shape.strokeWidth}
+                              fill={shape.fill}
+                              draggable
+                              hitStrokeWidth={10}
+                              onClick={(e) => onShapeClick(e, shape.id, shape)}
+                              onDragEnd={() => pushHistory(snapshot())}
+                              onTransformEnd={(e) => {
+                                const node = e.target as any;
+                                const sx = node.scaleX();
+                                node.scaleX(1);
+                                node.scaleY(1);
+                                setShapes((prev) =>
+                                  prev.map((s) =>
+                                    s.id === shape.id
+                                      ? {
+                                          ...(s as TriangleShape),
+                                          x: node.x(),
+                                          y: node.y(),
+                                          radius: Math.max(
+                                            4,
+                                            (s as TriangleShape).radius * sx
+                                          ),
+                                          rotation: node.rotation(),
+                                        }
+                                      : s
+                                  )
+                                );
+                                pushHistory(snapshot());
+                              }}
+                              ref={(n) => {
+                                if (isSelected)
+                                  selectedNodeRef.current = n;
+                              }}
+                            />
                           );
-                          pushHistory(snapshot());
-                        }}
-                        ref={(n) => {
-                          if (isSelected) selectedNodeRef.current = n;
-                        }}
-                      />
-                    );
-                  }
+                        }
 
-                  // TEXTE
-                  const txt = shape as TextShape;
-                  return (
-                    <Text
-                      key={txt.id}
-                      id={txt.id}
-                      x={txt.x}
-                      y={txt.y}
-                      text={txt.text}
-                      fontSize={txt.fontSize}
-                      fill={txt.fill}
-                      rotation={txt.rotation ?? 0}
-                      draggable
-                      hitStrokeWidth={10}
-                      onClick={(e) => onShapeClick(e, txt.id, txt)}
-                      onDblClick={(e) => startTextEdit(txt, e.target)}
-                      onDragEnd={() => pushHistory(snapshot())}
-                      onTransformEnd={(e) => {
-                        const node = e.target as any;
-                        const sy = node.scaleY();
-                        node.scaleX(1);
-                        node.scaleY(1);
-                        setShapes((prev) =>
-                          prev.map((s) =>
-                            s.id === txt.id
-                              ? {
-                                  ...(s as TextShape),
-                                  x: node.x(),
-                                  y: node.y(),
-                                  fontSize: Math.max(
-                                    8,
-                                    (s as TextShape).fontSize * sy
-                                  ),
-                                  rotation: node.rotation(),
-                                }
-                              : s
-                          )
+                        // Texte
+                        const txt = shape as TextShape;
+                        return (
+                          <Text
+                            key={txt.id}
+                            id={txt.id}
+                            x={txt.x}
+                            y={txt.y}
+                            text={txt.text}
+                            fontSize={txt.fontSize}
+                            fill={txt.fill}
+                            rotation={txt.rotation ?? 0}
+                            draggable
+                            hitStrokeWidth={10}
+                            onClick={(e) => onShapeClick(e, txt.id, txt)}
+                            onDblClick={(e) => startTextEdit(txt, e.target)}
+                            onDragEnd={() => pushHistory(snapshot())}
+                            onTransformEnd={(e) => {
+                              const node = e.target as any;
+                              const sy = node.scaleY();
+                              node.scaleX(1);
+                              node.scaleY(1);
+                              setShapes((prev) =>
+                                prev.map((s) =>
+                                  s.id === txt.id
+                                    ? {
+                                        ...(s as TextShape),
+                                        x: node.x(),
+                                        y: node.y(),
+                                        fontSize: Math.max(
+                                          8,
+                                          (s as TextShape).fontSize * sy
+                                        ),
+                                        rotation: node.rotation(),
+                                      }
+                                    : s
+                                )
+                              );
+                              pushHistory(snapshot());
+                            }}
+                            ref={(n) => {
+                              if (isSelected)
+                                selectedNodeRef.current = n;
+                            }}
+                          />
                         );
-                        pushHistory(snapshot());
-                      }}
-                      ref={(n) => {
-                        if (isSelected) selectedNodeRef.current = n;
-                      }}
-                    />
-                  );
-                })}
+                      })}
 
-                <Transformer
-                  ref={trRef}
-                  rotateEnabled
-                  enabledAnchors={[
-                    'top-left',
-                    'top-right',
-                    'bottom-left',
-                    'bottom-right',
-                  ]}
-                  anchorSize={8}
-                />
-              </Layer>
+                      <Transformer
+                        ref={trRef}
+                        rotateEnabled
+                        enabledAnchors={[
+                          'top-left',
+                          'top-right',
+                          'bottom-left',
+                          'bottom-right',
+                        ]}
+                        anchorSize={8}
+                      />
+                    </Layer>
 
-              <Layer listening={tool === 'brush'}>
-                {strokes.map((s) => (
-                  <Line
-                    key={s.id}
-                    id={s.id}
-                    points={s.points}
-                    stroke={s.color}
-                    strokeWidth={s.strokeWidth}
-                    tension={0.3}
-                    lineCap="round"
-                    lineJoin="round"
-                    onClick={(e) =>
-                      tool === 'select' && (e.cancelBubble = true)
-                    }
+                    <Layer listening={tool === 'brush'}>
+                      {strokes.map((s) => (
+                        <Line
+                          key={s.id}
+                          id={s.id}
+                          points={s.points}
+                          stroke={s.color}
+                          strokeWidth={s.strokeWidth}
+                          tension={0.3}
+                          lineCap="round"
+                          lineJoin="round"
+                          onClick={(e) =>
+                            tool === 'select' && (e.cancelBubble = true)
+                          }
+                        />
+                      ))}
+                    </Layer>
+                  </Stage>
+                </div>
+              </div>
+
+              <aside className="w-full lg:max-w-sm">
+                <h2 className="text-lg font-semibold mb-2">
+                  {t('editor.uploadExample')}
+                </h2>
+                <p className="text-sm text-ink/70 mb-3">
+                  {t('editor.uploadExampleHelp')}
+                </p>
+
+                <label className="inline-flex items-center gap-2 px-4 py-2 bg-sunset text-white rounded cursor-pointer hover:bg-berry transition">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleExampleUpload(f);
+                      e.target.value = '';
+                    }}
+                    disabled={exampleUploading}
                   />
-                ))}
-              </Layer>
-            </Stage>
+                  {exampleUploading ? t('editor.uploading') : t('editor.chooseFile')}
+                </label>
+
+                {exampleImage && (
+                  <div className="mt-4">
+                    <p className="text-sm text-ink/70 mb-2">{t('editor.preview')}</p>
+                    <img
+                      src={exampleImage}
+                      alt="Example upload"
+                      className="max-w-xs rounded-lg border shadow"
+                    />
+                  </div>
+                )}
+              </aside>
+            </div>
           </div>
         </div>
       </div>
+
+      {showSentModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowSentModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <h3 className="text-xl font-semibold">{t('editor.quoteDialogTitle')}</h3>
+              <button
+                className="p-1 rounded hover:bg-gray-100"
+                onClick={() => setShowSentModal(false)}
+                aria-label={t('editor.close') || 'Close'}
+                title={t('editor.close') || 'Close'}
+              >
+                <XIcon size={18} />
+              </button>
+            </div>
+            <p className="mt-3 text-ink/80">{t('editor.quoteDialogBody')}</p>
+            <div className="mt-5 flex justify-end">
+              <button
+                className="px-4 py-2 rounded bg-sunset text-white hover:bg-berry transition"
+                onClick={() => setShowSentModal(false)}
+              >
+                {t('editor.quoteDialogClose')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 }

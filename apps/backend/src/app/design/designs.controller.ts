@@ -11,14 +11,14 @@ export class DesignsController {
   @Post()
   create(
     @Req() req: any,
-    @Body() body: { message?: string | null; imagePath: string; scene?: any }
+    @Body() body: { message?: string | null; imagePath: string; scene?: any ;exampleImage?: string | null;}
   ) {
     return this.svc.create({
       userId: req.user.userId,
       message: body?.message ?? null,
       imagePath: body.imagePath,
       scene: body?.scene,
-    });
+     exampleImage: body?.exampleImage ?? null,    });
   }
 
   @Get()

@@ -4,10 +4,10 @@ import AdminProductsListSection from './adminProductsListSection';
 import AdminDesignsSection from './adminDesignsSection';
 import AdminSupportSection from './adminSupportSection';
 import AdminUsersListSection from './adminUsersListSection';
+import AdminOrdersSection from './adminOrdersSection';
 
 export default function AdminPage() {
   const [reloadKey, setReloadKey] = useState(0);
-
   return (
     <div className="w-full px-6 py-6">
       <div className="mb-4">
@@ -16,12 +16,13 @@ export default function AdminPage() {
           Gère les produits, les designs et le support client.
         </p>
       </div>
-
       <div className="grid grid-cols-1 gap-6 xl:gap-8 max-w-screen-2xl">
         <section className="col-span-1">
           <AdminProductsListSection reloadKey={reloadKey} />
         </section>
-
+        <section className="col-span-1">
+          <AdminOrdersSection />
+        </section>
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="col-span-1">
             <AdminProductsCreateSection

@@ -100,18 +100,21 @@ export default function Header() {
             </button>
           )}
 
-          <button
-            onClick={() => navigate('/cart')}
-            className="relative hover:text-yellow-300 focus:outline-none"
-            aria-label="Ouvrir le panier"
-          >
-            <ShoppingCart size={26} />
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {itemCount}
-              </span>
-            )}
-          </button>
+          {user && (
+            <button
+              onClick={() => navigate('/cart')}
+              className="relative hover:text-yellow-300 focus:outline-none"
+              aria-label="Ouvrir le panier"
+              title={t('nav.cart') || 'Panier'}
+            >
+              <ShoppingCart size={26} />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+          )}
 
           <LanguageSwitcher />
 

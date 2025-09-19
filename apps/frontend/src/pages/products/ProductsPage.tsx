@@ -2,8 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { httpGet } from '../../services/httpClient';
 import { useCart } from '../../context/cartContext';
+import { useCurrency } from '../../context/currencyContext';
 import { Product } from '../../types';
 import { ensureDisplayUrl } from '../../services/uploads.service';
+import { getCurrentUser } from '../../services/auth.service';
+import AuthPromptModal from '../../components/authPromptModal';
 
 const isHttpUrl = (s?: string) => !!s && /^https?:\/\//i.test(s);
 
@@ -23,13 +26,14 @@ function priceCentsOf(p: any): number {
   if (p?.price != null) return toCents(p.price);
   return 0;
 }
-function unitPrice(p: any): number {
+function unitPriceNumber(p: any): number {
   return Math.max(0, priceCentsOf(p)) / 100;
 }
 
 export default function ProductsPage() {
   const { t } = useTranslation();
   const { addToCart } = useCart();
+  const { currency, setCurrency, convert, format } = useCurrency();
 
   const [loading, setLoading] = useState(true);
   const [rawProducts, setRawProducts] = useState<Product[]>([]);
@@ -37,6 +41,7 @@ export default function ProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [catFilter, setCatFilter] = useState<string>('all');
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -44,12 +49,10 @@ export default function ProductsPage() {
       try {
         setLoading(true);
         const data = await httpGet<Product[]>('/products');
-
         const normalized = data.map((p) => ({
           ...p,
           priceCents: priceCentsOf(p),
         }));
-
         if (!alive) return;
         setRawProducts(normalized);
         setError(null);
@@ -115,11 +118,24 @@ export default function ProductsPage() {
     });
   }, [products, query, catFilter]);
 
-  const formatPrice = (p: Product) =>
-    new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: p.currency || 'EUR',
-    }).format(unitPrice(p));
+  const handleAddToCart = (p: Product, cover: string) => {
+    const user = getCurrentUser();
+    if (!user) {
+      setShowAuthPrompt(true);
+      return;
+    }
+
+    const productCurrency = (p.currency as 'MAD' | 'EUR') || 'EUR';
+    const price = unitPriceNumber(p);
+    const priceInUserCurrency = convert(price, productCurrency, currency);
+
+    addToCart({
+      id: String(p.id),
+      name: p.title?.trim() || p.slug,
+      price: priceInUserCurrency,
+      image: cover || '',
+    });
+  };
 
   if (loading) {
     return (
@@ -143,13 +159,14 @@ export default function ProductsPage() {
           {t('products.title') || 'Produits'}
         </h1>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 items-center">
           <input
             className="border rounded px-3 py-2 w-56"
             placeholder={t('products.search') || 'Rechercher...'}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+
           <select
             className="border rounded px-3 py-2"
             value={catFilter}
@@ -164,6 +181,16 @@ export default function ProductsPage() {
               </option>
             ))}
           </select>
+
+          <select
+            className="border rounded px-3 py-2"
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as 'MAD' | 'EUR')}
+            title={t('currency.select') || 'Devise'}
+          >
+            <option value="MAD">MAD</option>
+            <option value="EUR">EUR</option>
+          </select>
         </div>
       </div>
 
@@ -175,7 +202,15 @@ export default function ProductsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {filtered.map((p) => {
             const cover = p.images?.[0] || '';
-            const price = unitPrice(p);
+            const productCurrency = (p.currency as 'MAD' | 'EUR') || 'EUR';
+            const price = unitPriceNumber(p);
+            const priceInUserCurrency = convert(
+              price,
+              productCurrency,
+              currency
+            );
+            const priceLabel = format(priceInUserCurrency, currency);
+
             return (
               <div
                 key={p.id}
@@ -188,7 +223,8 @@ export default function ProductsPage() {
                     className="w-full h-48 object-cover rounded-t-lg"
                     loading="lazy"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      (e.currentTarget as HTMLImageElement).style.display =
+                        'none';
                     }}
                   />
                 )}
@@ -200,17 +236,13 @@ export default function ProductsPage() {
                   <h2 className="text-lg font-semibold mb-2">
                     {p.title?.trim() || p.slug}
                   </h2>
-                  <p className="text-sunset font-bold mb-4">{formatPrice(p)}</p>
+
+                  <p className="text-sunset font-bold mb-4">{priceLabel}</p>
+
                   <button
+                    type="button"
                     className="bg-sunset text-white px-4 py-2 rounded hover:bg-berry transition"
-                    onClick={() =>
-                      addToCart({
-                        id: String(p.id),
-                        name: p.title?.trim() || p.slug,
-                        price,
-                        image: cover || '',
-                      })
-                    }
+                    onClick={() => handleAddToCart(p, cover)}
                   >
                     {t('products.addToCart') || 'Ajouter au panier'}
                   </button>
@@ -220,6 +252,10 @@ export default function ProductsPage() {
           })}
         </div>
       )}
+      <AuthPromptModal
+        open={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+      />
     </div>
   );
 }

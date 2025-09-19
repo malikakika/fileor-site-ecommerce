@@ -37,7 +37,6 @@ export class ChatService {
       });
       conv = await this.convRepo.save(conv);
     } else {
-      // garder le dernier nom si fourni
       if (name && !conv.contactName) {
         conv.contactName = name;
         await this.convRepo.save(conv);

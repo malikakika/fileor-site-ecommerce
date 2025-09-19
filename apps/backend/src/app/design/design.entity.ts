@@ -22,6 +22,9 @@ export class Design {
 
   @Column({ type: 'jsonb', nullable: true })
   scene?: any;
+  @Column({ type: 'text', nullable: true }) 
+  exampleImage?: string | null;
+
 
   @CreateDateColumn()
   createdAt!: Date;

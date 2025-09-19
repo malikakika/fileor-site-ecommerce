@@ -13,34 +13,56 @@ import AccountPage from '../pages/accountPage';
 import AdminPage from '../pages/admin/adminPage';
 import ProductsPage from '../pages/products/ProductsPage';
 import ChatPage from '../pages/chatPage';
+import ThankYouPage from '../pages/thankYouPage';
+import CheckoutCODPage from '../pages/checkoutCODPage';
+import { CurrencyProvider } from '../context/currencyContext';
+import RequireAuth from '../components/requireAuth';
 
 function App() {
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Header />
+    <CurrencyProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <div className="min-h-screen flex flex-col">
+            <Header />
 
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/editor" element={<ProductEditorPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/products" element={<ProductsPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/account" element={<AccountPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/chat" element={<ChatPage />} />
-            </Routes>
-          </main>
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route
+                  path="/editor"
+                  element={
+                    <RequireAuth>
+                      <ProductEditorPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route
+                  path="/cart"
+                  element={
+                    <RequireAuth>
+                      <CartPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/checkout/cod" element={<CheckoutCODPage />} />
+                <Route path="/checkout/success" element={<ThankYouPage />} />
+              </Routes>
+            </main>
 
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </CartProvider>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </CartProvider>
+    </CurrencyProvider>
   );
 }
 

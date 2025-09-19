@@ -1,4 +1,3 @@
-// apps/backend/src/app/products/products.controller.ts
 import {
   Body,
   Controller,

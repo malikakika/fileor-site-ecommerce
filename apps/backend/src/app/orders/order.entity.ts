@@ -1,27 +1,78 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  Index,
+  Check,
 } from 'typeorm';
 import { User } from '../users/user.entity';
-import { OrderItem } from './orderItem.entity';
 
-export type OrderStatus = 'PENDING' | 'PAID' | 'SHIPPED' | 'CANCELED';
+export type OrderStatus =
+  | 'PENDING_PAYMENT'
+  | 'PAID'
+  | 'CONFIRMED'
+  | 'PROCESSING'
+  | 'DELIVERED'
+  | 'CANCELLED';
+
+export type PaymentMethod = 'COD' | 'BANK_TRANSFER' | 'STRIPE';
+export type Currency = 'MAD' | 'EUR';
+
+export type OrderItemJson = {
+  id: string;
+  name: string;
+  quantity: number;
+  unitPriceCents: number;
+  subtotalCents: number;
+};
 
 @Entity()
+@Index('idx_order_status', ['status'])
+@Index('idx_order_created_at', ['createdAt'])
+@Check(`"currency" IN ('MAD','EUR')`)
+@Check(`"paymentMethod" IN ('COD','BANK_TRANSFER','STRIPE')`)
+@Check(
+  `"status" IN ('PENDING_PAYMENT','PAID','CONFIRMED','PROCESSING','DELIVERED','CANCELLED')`
+)
 export class Order {
-  @PrimaryGeneratedColumn('uuid') id!: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @ManyToOne(() => User) user!: User;
+  @ManyToOne(() => User, { eager: false, nullable: true })
+  user?: User | null;
 
-  @Column({ type: 'varchar', default: 'PENDING' }) status!: OrderStatus;
-  @Column('int') totalCents!: number;
-  @Column({ default: 'EUR' }) currency!: string;
+  @Column({ type: 'text' })
+  customerName!: string;
 
-  @OneToMany(() => OrderItem, (i) => i.order, { cascade: true })
-  items!: OrderItem[];
+  @Column({ type: 'text', nullable: true })
+  customerEmail?: string | null;
 
-  @Column({ type: 'text', nullable: true }) note?: string;
+  @Column({ type: 'text' })
+  customerPhone!: string;
+
+  @Column({ type: 'text' })
+  address!: string;
+
+  @Column({ type: 'text', nullable: true })
+  note?: string | null;
+
+  @Column({ type: 'text', default: 'COD' })
+  paymentMethod!: PaymentMethod;
+
+  @Column({ type: 'text', default: 'PENDING_PAYMENT' })
+  status!: OrderStatus;
+
+  @Column({ type: 'jsonb' })
+  items!: OrderItemJson[];
+
+  @Column({ type: 'int', default: 0 })
+  totalCents!: number;
+
+  @Column({ type: 'text', default: 'MAD' })
+  currency!: Currency;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 }

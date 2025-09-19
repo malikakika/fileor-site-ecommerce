@@ -14,6 +14,7 @@ export type DesignDTO = {
   imagePath: string;
   scene?: unknown;
   createdAt: string;
+   exampleImage?: string | null;
 };
 
 export const designsService = {
@@ -21,6 +22,8 @@ export const designsService = {
     message?: string | null;
     imagePath: string;
     scene?: unknown;
+    exampleImage?: string | null; 
+
   }) => httpPostSecure<DesignDTO>('/designs', payload),
 
   list: () => httpGetSecure<DesignDTO[]>('/designs'),

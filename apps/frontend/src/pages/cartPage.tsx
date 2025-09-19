@@ -1,34 +1,39 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trash2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cartContext';
+import { useCurrency } from '../context/currencyContext';
 import { ensureDisplayUrl } from '../services/uploads.service';
 
 type DisplayItem = {
   id: string;
   name: string;
-  price: number;
+  displayPrice: number;
   quantity: number;
+  basePrice: number;              
+  baseCurrency: 'MAD' | 'EUR';    
   image?: string;
   resolvedImage: string;
 };
 
 const isHttp = (s?: string) => !!s && /^https?:\/\//i.test(s);
-const fmtDH = (n: number | string | undefined | null) => {
-  const v =
-    typeof n === 'number'
-      ? n
-      : typeof n === 'string'
-      ? parseFloat(n.replace(',', '.'))
-      : 0;
-  if (!Number.isFinite(v)) return '0.00 DH';
-  return `${v.toFixed(2)} DH`;
-};
+
+function toNumber(n: unknown): number {
+  if (typeof n === 'number' && Number.isFinite(n)) return n;
+  if (typeof n === 'string') {
+    const v = parseFloat(n.replace(',', '.'));
+    return Number.isFinite(v) ? v : 0;
+  }
+  return 0;
+}
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart } = useCart();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const { currency, convert, format } = useCurrency();
 
   const [items, setItems] = useState<DisplayItem[]>([]);
 
@@ -38,15 +43,23 @@ export default function CartPage() {
 
     (async () => {
       const resolved = await Promise.all(
-        cart.map(async (it) => {
-          const priceNum =
-            typeof it.price === 'number'
-              ? it.price
-              : parseFloat(String(it.price).replace(',', '.')) || 0;
+        cart.map(async (it: any) => {
+       
+          const baseCurrency: 'MAD' | 'EUR' =
+            (it.baseCurrency as 'MAD' | 'EUR') ||
+            (it.currency as 'MAD' | 'EUR') ||
+            'EUR';
+
+          const basePrice = toNumber(
+            typeof it.basePrice !== 'undefined' ? it.basePrice : it.price
+          );
+
           const qtyNum = Math.max(1, Math.round(Number(it.quantity) || 1));
 
+          const displayPrice = convert(basePrice, baseCurrency, currency);
+
           let resolvedImage = '';
-          const raw = it.image;
+          const raw = it.image as string | undefined;
           if (raw) {
             if (isHttp(raw)) resolvedImage = raw;
             else if (cache.has(raw)) resolvedImage = cache.get(raw)!;
@@ -63,7 +76,9 @@ export default function CartPage() {
           return {
             id: String(it.id),
             name: String(it.name ?? ''),
-            price: priceNum,
+            basePrice,
+            baseCurrency,
+            displayPrice,
             quantity: qtyNum,
             image: raw,
             resolvedImage,
@@ -76,7 +91,8 @@ export default function CartPage() {
     return () => {
       alive = false;
     };
-  }, [cart]);
+ 
+  }, [cart, currency, convert]);
 
   const totalItems = useMemo(
     () => items.reduce((sum, it) => sum + it.quantity, 0),
@@ -84,9 +100,11 @@ export default function CartPage() {
   );
 
   const grandTotal = useMemo(
-    () => items.reduce((sum, it) => sum + it.price * it.quantity, 0),
+    () => items.reduce((sum, it) => sum + it.displayPrice * it.quantity, 0),
     [items]
   );
+
+  const fmt = (n: number) => format(n, currency);
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4">
@@ -121,7 +139,7 @@ export default function CartPage() {
 
           <ul className="space-y-4">
             {items.map((item) => {
-              const lineTotal = item.price * item.quantity;
+              const lineTotal = item.displayPrice * item.quantity;
               return (
                 <li
                   key={item.id}
@@ -145,22 +163,22 @@ export default function CartPage() {
                       <div>
                         <h2 className="text-lg font-semibold">{item.name}</h2>
                         <div className="mt-1 md:hidden text-sm text-ink/70">
-                          {fmtDH(item.price)} × {item.quantity} ={' '}
-                          <span className="font-medium">
-                            {fmtDH(lineTotal)}
-                          </span>
+                          {fmt(item.displayPrice)} × {item.quantity} ={' '}
+                          <span className="font-medium">{fmt(lineTotal)}</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="hidden md:block col-span-2 text-right">
-                      {fmtDH(item.price)}
+                      {fmt(item.displayPrice)}
                     </div>
+
                     <div className="hidden md:block col-span-2 text-center">
                       {item.quantity}
                     </div>
+
                     <div className="hidden md:block col-span-2 text-right font-medium">
-                      {fmtDH(lineTotal)}
+                      {fmt(lineTotal)}
                     </div>
                   </div>
 
@@ -182,7 +200,7 @@ export default function CartPage() {
             })}
           </ul>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+=          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="text-ink/80">
               {t('cart.itemsCount')
                 ? t('cart.itemsCount', { count: totalItems })
@@ -191,7 +209,7 @@ export default function CartPage() {
 
             <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold">
-                {t('cart.total') || 'Total'}: {fmtDH(grandTotal)}
+                {t('cart.total') || 'Total'}: {fmt(grandTotal)}
               </h2>
               <button
                 onClick={clearCart}
@@ -199,7 +217,10 @@ export default function CartPage() {
               >
                 {t('cart.clear') || 'Vider'}
               </button>
-              <button className="bg-sunset text-white px-6 py-2 rounded hover:bg-berry transition">
+              <button
+                onClick={() => navigate('/checkout/cod')}
+                className="bg-sunset text-white px-6 py-2 rounded hover:bg-berry transition"
+              >
                 {t('cart.checkout') || 'Payer'}
               </button>
             </div>

@@ -31,20 +31,57 @@
     "forest": "Forêt Magique"
   },
   "editor": {
-    "title": "Personnalise ton bracelet",
-    "subtitle": "Écris un message, dessine sur le canevas avec l’outil seau de couleur ou fais les deux, puis envoie-nous ta création.",
-    "customMessage": "Message personnalisé",
-    "messagePlaceholder": "Explique ton idée, tes couleurs préférées ou un mot à inscrire...",
-    "drawTitle": "Dessine ton bracelet",
-    "examplesTitle": "Exemples inspirants",
-    "exampleChevron": "Chevron",
-    "exampleLetterM": "Lettre M",
-    "saveButton": "Enregistrer"
+    "heroTitle": "Créez votre design personnalisé",
+    "heroSubtitle": "Dessinez une idée avec nos outils ou téléversez un exemple. Nous vous répondons rapidement avec un devis.",
+    "quoteBannerTitle": "Comment ça marche ?",
+    "quoteBannerText": "Créez votre croquis ou ajoutez une image d’exemple. Nous l’envoyons à notre équipe qui vous recontacte (e-mail/téléphone) avec un devis et un délai.",
+    "uploadExample": "Ajouter une image d’exemple",
+    "uploadExampleHelp": "Photo, croquis, maquette… tout ce qui peut nous aider à comprendre ce que vous voulez.",
+    "uploading": "Téléversement…",
+    "chooseFile": "Choisir une image",
+    "preview": "Aperçu",
+    "uploadError": "Échec du téléversement. Réessayez.",
+    "saveError": "Impossible d’enregistrer le design. Veuillez réessayer.",
+    "toolSelect": "Sélectionner",
+    "toolPaint": "Remplir (seau)",
+    "toolBrush": "Pinceau",
+    "toolRect": "Rectangle",
+    "toolCircle": "Cercle",
+    "toolTriangle": "Triangle",
+    "hideGrid": "Cacher la grille",
+    "showGrid": "Afficher la grille",
+    "brushWidth": "Épaisseur du pinceau",
+    "shapeStrokeWidth": "Épaisseur du contour",
+    "colorActive": "Couleur active (pinceau/texte)",
+    "colorStroke": "Couleur du contour",
+    "colorFill": "Couleur de remplissage",
+    "delete": "Supprimer",
+    "clear": "Effacer tout",
+    "save": "Envoyer",
+    "messagePlaceholder": "Expliquez ce que vous souhaitez (tailles, couleurs, texte, détails…)…",
+    "quoteDialogTitle": "Design envoyé à l’équipe",
+    "quoteDialogBody": "Merci 🙌 Votre design (et l’éventuelle image d’exemple) ont bien été envoyés. Un membre de notre équipe vous contactera très vite pour vous communiquer un devis et un délai de réalisation.",
+    "quoteDialogClose": "J’ai compris",
+    "close": "Fermer"
   },
   "design": {
     "savedLog": "Design enregistré et envoyé à l'admin :",
     "savedAlert": "Votre design a été enregistré et envoyé !"
   },
+  "designs": {
+    "sectionTitle": "Designs personnalisés",
+    "refresh": "Rafraîchir",
+    "loading": "...",
+    "user": "Utilisateur",
+    "showDesign": "Afficher le design en grand",
+    "showExample": "Afficher l’image d’exemple en grand",
+    "design": "Design",
+    "exampleImage": "Image d’exemple",
+    "noImage": "(pas d’image)",
+    "empty": "Aucun design.",
+    "close": "Fermer"
+  },
+
   "nav": {
     "home": "Accueil",
     "about": "À propos",
@@ -110,16 +147,28 @@
     "shopNow": " Découvrir nos produits",
     "total": "Total",
     "clear": "Vider le panier",
-    "checkout": "Passer à la caisse"
+    "checkout": "Passer à la caisse",
+    "product": "Produit",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "subtotal": "Sous-total",
+    "removeItem": "Retirer",
+    "itemsCount_one": "Article : {{count}}",
+    "itemsCount_other": "Articles : {{count}}"
   },
   "products": {
     "bracelets": "Bracelets brésiliens",
     "atebas": "Atebas",
     "beadAccessories": "Accessoires en perles",
     "anklets": "Chaînes de cheville",
-    "addToCart": "Ajouter au panier",
-    "soon": "Produits bientôt disponibles "
+    "soon": "Produits bientôt disponibles ",
+    "title": "Produits",
+    "search": "Rechercher...",
+    "allCategories": "Toutes les catégories",
+    "empty": "Aucun produit trouvé.",
+    "addToCart": "Ajouter au panier"
   },
+
   "auth": {
     "registerTitle": "Créer un compte",
     "nameOptional": "Nom (optionnel)",
@@ -139,7 +188,14 @@
     },
     "success": {
       "register": "Compte créé ! Redirection..."
-    }
+    },
+    "profile": "Profil",
+    "admin": "Administration",
+    "logout": "Se déconnecter",
+    "requiredTitle": "Connexion requise",
+    "requiredMessage": "Vous devez être connecté(e) pour ajouter un article au panier et finaliser votre commande.",
+    "goLogin": "Se connecter",
+    "later": "Plus tard"
   },
 
   "account": {
@@ -162,6 +218,82 @@
       "profileUpdate": "Erreur lors de la mise à jour du profil",
       "passwordUpdate": "Erreur lors du changement de mot de passe",
       "oldPasswordIncorrect": "Ancien mot de passe incorrect "
+    }
+  },
+  "cod": {
+    "title": "Paiement à la livraison",
+    "fullName": "Nom complet",
+    "fullNamePh": "Ex. Malika CHOUBRI",
+    "phone": "Téléphone",
+    "phonePh": "Ex. +212 6 XX XX XX XX",
+    "address": "Adresse",
+    "addressPh": "Rue, numéro, complément",
+    "city": "Ville",
+    "cityPh": "Ex. Casablanca",
+    "note": "Remarques (optionnel)",
+    "notePh": "Ex. Sonnez à la porte 3",
+    "confirm": "Confirmer la commande",
+    "processing": "Traitement...",
+    "backToCart": "Retourner au panier",
+    "summary": "Résumé de commande",
+    "total": "Total",
+    "codNote": "Vous paierez le montant exact en espèces au moment de la livraison.",
+    "thanksTitle": "Merci pour votre commande !",
+    "thanksSubtitle": "Nous vous contacterons pour confirmer la livraison.",
+    "orderRef": "Référence",
+    "continueShopping": "Continuer les achats",
+    "errors": {
+      "validation": "Veuillez vérifier le formulaire.",
+      "generic": "Une erreur est survenue, réessayez."
+    }
+  },
+
+  "adminOrders": {
+    "title": "Commandes",
+    "filterLabel": "Filtrer par statut",
+    "refresh": "Rafraîchir",
+
+    "status": {
+      "ALL": "Tous les statuts",
+      "PENDING_PAYMENT": "En attente (COD)",
+      "PAID": "Payées",
+      "CONFIRMED": "Confirmées",
+      "PROCESSING": "En traitement",
+      "DELIVERED": "Livrées"
+    },
+
+    "summary": {
+      "count": "Total commandes",
+      "revenue": "Montant cumulé"
+    },
+
+    "empty": "Aucune commande.",
+
+    "table": {
+      "date": "Date",
+      "customer": "Client",
+      "contact": "Contact",
+      "address": "Adresse",
+      "payment": "Paiement",
+      "status": "Statut",
+      "total": "Total",
+      "details": "Détails",
+      "hide": "Masquer"
+    },
+
+    "details": {
+      "items": "Articles",
+      "product": "Produit",
+      "qty": "Qté",
+      "unitPrice": "PU",
+      "subtotal": "Sous-total"
+    },
+
+    "paymentMethod": {
+      "COD": "Paiement à la livraison",
+      "CARD": "Carte",
+      "BANK_TRANSFER": "Virement bancaire",
+      "STRIPE": "Carte (Stripe)"
     }
   }
 }

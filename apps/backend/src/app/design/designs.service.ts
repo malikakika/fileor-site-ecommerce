@@ -14,11 +14,13 @@ export class DesignsService {
     message?: string | null;
     imagePath: string;
     scene?: any;
+    exampleImage?: string | null;
   }) {
     const d = this.repo.create({
       message: input.message ?? null,
       imagePath: input.imagePath,
       scene: input.scene ?? null,
+      exampleImage: input.exampleImage ?? null, 
       user: { id: input.userId } as any,
     });
     return this.repo.save(d);

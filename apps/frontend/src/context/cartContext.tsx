@@ -127,7 +127,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       setCart(items);
       return;
     }
-    // invité
     setCart((prev) => {
       const price = normalizePriceFromAny(item);
       const quantity = Math.max(1, Math.round(qty || 1));
