@@ -1,3 +1,4 @@
+# ---------- build ----------
 FROM node:20-alpine AS build
 WORKDIR /repo
 
@@ -16,13 +17,19 @@ COPY . .
 # build du backend
 RUN npx nx build backend --configuration=production
 
-# ---- runtime ----
+
+# ---------- runtime ----------
 FROM node:20-alpine
 WORKDIR /app
 
-# le bon répertoire de sortie est apps/backend/dist
+# 1. copier les package.json générés dans dist
+COPY --from=build /repo/apps/backend/dist/package*.json ./
+
+# 2. installer uniquement les dépendances de prod
+RUN npm ci --omit=dev --ignore-scripts
+
+# 3. copier les fichiers buildés (main.js, assets, etc.)
 COPY --from=build /repo/apps/backend/dist ./
 
 EXPOSE 3000
 CMD ["node", "main.js"]
-
