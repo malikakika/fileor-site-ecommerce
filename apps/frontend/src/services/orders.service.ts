@@ -1,10 +1,10 @@
 import { httpGetSecure, httpPostSecure } from './httpClient';
 
 export type ServerOrderItem = {
-  id: string;         
+  id: string;
   name: string;
   quantity: number;
-  unitPriceCents?: number; 
+  unitPriceCents?: number;
   subtotalCents?: number;
   unitPrice?: number;
   subtotal?: number;
@@ -30,8 +30,8 @@ export type ServerOrder = {
 
   items: ServerOrderItem[];
 
-  totalCents?: number;    
-  total?: number;         
+  totalCents?: number;
+  total?: number;
   currency?: 'MAD' | 'EUR';
 
   createdAt: string;
@@ -41,8 +41,8 @@ export type OrderItemDTO = {
   id: string;
   name: string;
   quantity: number;
-  unitPrice: number;  
-  subtotal: number;   
+  unitPrice: number;
+  subtotal: number;
 };
 
 export type OrderDTO = {
@@ -65,7 +65,7 @@ export type OrderDTO = {
 
   items: OrderItemDTO[];
 
-  total: number;               
+  total: number;
   currency: 'MAD' | 'EUR';
   createdAt: string;
 };
@@ -73,8 +73,11 @@ export type OrderDTO = {
 function normalizeOrder(o: ServerOrder): OrderDTO {
   const currency: 'MAD' | 'EUR' = (o.currency as any) || 'MAD';
   const total =
-    o.totalCents != null ? o.totalCents / 100 :
-    typeof o.total === 'number' ? o.total : 0;
+    o.totalCents != null
+      ? o.totalCents / 100
+      : typeof o.total === 'number'
+      ? o.total
+      : 0;
 
   const items: OrderItemDTO[] = (o.items || []).map((it) => ({
     id: it.id,
@@ -122,33 +125,73 @@ export type CreateOrderPayload = {
   address: string;
   city?: string;
   note?: string | null;
-  market?: 'MA' | 'FR'; 
-  items: CreateOrderItemInput[];  
+  market?: 'MA' | 'FR';
+  items: CreateOrderItemInput[];
   paymentMethod?: 'COD' | 'BANK_TRANSFER' | 'STRIPE';
 };
+
+function readCartKeys(): string[] {
+  return ['cart_v2', 'cart'];
+}
+function readCart(): any[] {
+  for (const key of readCartKeys()) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch {
+      /* ignore */
+    }
+  }
+  return [];
+}
+function writeCart(items: any[]) {
+  for (const key of readCartKeys()) {
+    localStorage.setItem(key, JSON.stringify(items));
+  }
+}
+function clearCart() {
+  for (const key of readCartKeys()) {
+    localStorage.removeItem(key);
+  }
+}
 
 export const ordersService = {
   create: async (payload: CreateOrderPayload) => {
     const products = await httpGetSecure<{ id: string; slug: string }[]>(
       '/products'
     );
+    const byId = new Map(products.map((p) => [String(p.id), p]));
 
-    const byId = new Map(products.map(p => [p.id, p]));
-
-    const safeItems = (payload.items || [])
-      .map(it => {
-        if (byId.has(it.id)) {
+    const incoming = payload.items || [];
+    const unknownIds: string[] = [];
+    const safeItems = incoming
+      .map((it) => {
+        const id = String(it.id);
+        if (byId.has(id)) {
           return {
-            id: it.id,
+            id,
             quantity: Math.max(1, Number(it.quantity || 1)),
           };
+        } else {
+          unknownIds.push(id);
+          return null;
         }
-        return null; 
       })
       .filter(Boolean) as CreateOrderItemInput[];
 
+    if (unknownIds.length) {
+      const cart = readCart();
+      const cleaned = cart.filter((it) => !unknownIds.includes(String(it.id)));
+      if (cleaned.length) writeCart(cleaned);
+      else clearCart();
+
+      throw new Error(
+        "Votre panier contenait des produits qui ne sont plus disponibles. Ils ont été retirés. Merci de réessayer."
+      );
+    }
+
     if (safeItems.length === 0) {
-      localStorage.removeItem('cart_v2');
+      clearCart();
       throw new Error(
         'Votre panier contenait des produits qui ne sont plus disponibles.'
       );
@@ -177,18 +220,47 @@ export const ordersService = {
       items: safeItems,
     };
 
-    return httpPostSecure<ServerOrder>('/orders', body).then(normalizeOrder);
+    try {
+      const order = await httpPostSecure<ServerOrder>('/orders', body);
+      return normalizeOrder(order);
+    } catch (err: any) {
+      try {
+        const raw = typeof err?.message === 'string' ? err.message : '';
+        const parsed = JSON.parse(raw);
+        const m: string | undefined = parsed?.message;
+        if (m && /unknown product ids/i.test(m)) {
+          const part = m.split(':')[1] || '';
+          const bad = part
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
+          if (bad.length) {
+            const cart = readCart();
+            const cleaned = cart.filter((it) => !bad.includes(String(it.id)));
+            if (cleaned.length) writeCart(cleaned);
+            else clearCart();
+
+            throw new Error(
+              "Votre panier contenait des produits qui ne sont plus disponibles. Ils ont été retirés. Merci de réessayer."
+            );
+          }
+        }
+      } catch {
+        /* ignore parsing issues */
+      }
+      throw err;
+    }
   },
 
   adminList: (params?: { status?: string }) => {
     const status = params?.status ?? 'ALL';
-    return httpGetSecure<ServerOrder[]>(`/admin/orders?status=${encodeURIComponent(status)}`)
-      .then(arr => arr.map(normalizeOrder));
+    return httpGetSecure<ServerOrder[]>(
+      `/admin/orders?status=${encodeURIComponent(status)}`
+    ).then((arr) => arr.map(normalizeOrder));
   },
 
   myOrders: () =>
-    httpGetSecure<ServerOrder[]>('/orders/me').then(arr =>
+    httpGetSecure<ServerOrder[]>('/orders/me').then((arr) =>
       arr.map(normalizeOrder)
     ),
 };
-
