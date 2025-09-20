@@ -128,11 +128,31 @@ export type CreateOrderPayload = {
 };
 
 export const ordersService = {
-  create: (payload: CreateOrderPayload) => {
-    const safeItems = (payload.items || []).map((it) => ({
-      id: String(it.id),
-      quantity: Math.max(1, Number(it.quantity || 1)),
-    }));
+  create: async (payload: CreateOrderPayload) => {
+    const products = await httpGetSecure<{ id: string; slug: string }[]>(
+      '/products'
+    );
+
+    const byId = new Map(products.map(p => [p.id, p]));
+
+    const safeItems = (payload.items || [])
+      .map(it => {
+        if (byId.has(it.id)) {
+          return {
+            id: it.id,
+            quantity: Math.max(1, Number(it.quantity || 1)),
+          };
+        }
+        return null; 
+      })
+      .filter(Boolean) as CreateOrderItemInput[];
+
+    if (safeItems.length === 0) {
+      localStorage.removeItem('cart_v2');
+      throw new Error(
+        'Votre panier contenait des produits qui ne sont plus disponibles.'
+      );
+    }
 
     const body = {
       paymentMethod: payload.paymentMethod ?? 'COD',
@@ -163,11 +183,12 @@ export const ordersService = {
   adminList: (params?: { status?: string }) => {
     const status = params?.status ?? 'ALL';
     return httpGetSecure<ServerOrder[]>(`/admin/orders?status=${encodeURIComponent(status)}`)
-      .then((arr) => arr.map(normalizeOrder));
+      .then(arr => arr.map(normalizeOrder));
   },
 
   myOrders: () =>
-    httpGetSecure<ServerOrder[]>('/orders/me').then((arr) =>
+    httpGetSecure<ServerOrder[]>('/orders/me').then(arr =>
       arr.map(normalizeOrder)
     ),
 };
+
