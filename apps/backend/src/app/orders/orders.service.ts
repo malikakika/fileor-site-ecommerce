@@ -7,7 +7,7 @@ import { Repository, In } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../products/product.entity';
 
-type IncomingItem = { id: string; quantity: number }; 
+type IncomingItem = { id: string; quantity: number };
 
 @Injectable()
 export class OrdersService {
@@ -19,12 +19,14 @@ export class OrdersService {
     private readonly productsRepo: Repository<Product>,
   ) {}
 
+
   private priceCentsOf(p: any): number {
-    if (p?.priceCents != null) return Number(p.priceCents) | 0;
-    if (p?.price_cents != null) return Number(p.price_cents) | 0;
+    if (p?.priceCents != null) return Math.round(Number(p.priceCents)) | 0;
+    if (p?.price_cents != null) return Math.round(Number(p.price_cents)) | 0;
+
     if (p?.price != null) {
       const n = Number(p.price);
-      if (Number.isFinite(n)) return Math.round(n); 
+      if (Number.isFinite(n)) return Math.round(n * 100);
       const s = String(p.price).replace(',', '.');
       const f = parseFloat(s);
       if (Number.isFinite(f)) return Math.round(f * 100);
@@ -32,6 +34,7 @@ export class OrdersService {
     return 0;
   }
 
+ 
   async create(input: {
     userId?: string | null;
     paymentMethod: 'COD' | 'BANK_TRANSFER' | 'STRIPE';
@@ -40,30 +43,33 @@ export class OrdersService {
     customerEmail: string | null;
     customerPhone: string;
     address: string;
-    note?: string | null; 
-    items: IncomingItem[]; 
+    note?: string | null;
+    items: IncomingItem[];
   }) {
     if (!input.items?.length) {
       throw new BadRequestException('No items provided');
     }
 
-    const ids = input.items.map((it) => it.id);
+    const ids = input.items.map((it) => String(it.id));
     const products = await this.productsRepo.find({
       where: { id: In(ids) as any },
     });
     const byId = new Map(products.map((p) => [String(p.id), p]));
 
-    const missing = ids.filter((id) => !byId.has(String(id)));
-    if (missing.length) {
+    const missing = ids.filter((id) => !byId.has(id));
+
+    const keptItems = input.items.filter((it) => byId.has(String(it.id)));
+    if (!keptItems.length) {
       throw new BadRequestException(
         `Unknown product ids: ${missing.join(', ')}`
       );
     }
 
-    const lines = input.items.map((it) => {
+    const lines = keptItems.map((it) => {
       const prod = byId.get(String(it.id))!;
       const qty = Math.max(1, Number(it.quantity || 1));
       const unitPriceCents = this.priceCentsOf(prod);
+
       return {
         id: String(prod.id),
         name: String((prod as any).title ?? (prod as any).name ?? ''),
@@ -73,7 +79,7 @@ export class OrdersService {
       };
     });
 
-    const totalCents = lines.reduce((s, l) => s + l.subtotalCents, 0);
+    const totalCents = lines.reduce((sum, l) => sum + l.subtotalCents, 0);
     const currency: 'MAD' | 'EUR' = input.market === 'FR' ? 'EUR' : 'MAD';
 
     const order = this.ordersRepo.create({
@@ -87,7 +93,12 @@ export class OrdersService {
       items: lines,
       totalCents,
       currency,
+
     });
+
+    if (missing.length) {
+      console.warn('Order created after filtering unknown product ids:', missing);
+    }
 
     return this.ordersRepo.save(order);
   }
