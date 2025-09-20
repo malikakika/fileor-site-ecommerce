@@ -28,10 +28,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: "https://api.fileor.roadshine.ma/api"
+        VITE_SUPABASE_URL: "https://ezaztniwaoqzniwmtfoo.supabase.co"
+        VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6YXp0bml3YW9xem5pd210Zm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODk3NjQsImV4cCI6MjA3MTU2NTc2NH0.qVf9CWToGZQ44L5RGfZtJvMTL0t41cBpTfvTQiR1MAc"
     restart: unless-stopped
     ports:
       - "127.0.0.1:3005:80"
     networks: [fileor_net]
+
 
 volumes:
   pgdata_fileor:
