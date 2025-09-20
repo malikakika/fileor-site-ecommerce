@@ -23,15 +23,11 @@ services:
       - "127.0.0.1:4005:3000"
     networks: [fileor_net]
 
+  
   front_fileor:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-      args:
-        VITE_API_URL: ${VITE_API_URL}
-        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
-        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
-        SUPABASE_BUCKET: ${SUPABASE_BUCKET}
     restart: unless-stopped
     ports:
       - "127.0.0.1:3005:80"
