@@ -20,7 +20,7 @@ services:
     depends_on:
       - postgres_fileor
     ports:
-      - "127.0.0.1:4005:3000"
+      - "127.0.0.1:4005:3333"
     networks: [fileor_net]
 
   
