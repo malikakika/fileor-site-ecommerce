@@ -1,7 +1,7 @@
 import { clearSession, getToken } from './auth.service';
 
 export const API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
+  import.meta.env.VITE_API_URL;
 
 export function isFormData(x: unknown): x is FormData {
   if (typeof FormData !== 'undefined' && x instanceof FormData) return true;
