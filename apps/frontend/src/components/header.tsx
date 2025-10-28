@@ -63,9 +63,13 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-sunset to-berry text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-extrabold tracking-wide">
-          Fileor
-        </Link>
+         <Link to="/" className="flex items-center ">
+    <img
+      src="public/logo.png" 
+      alt="Filéor logo"
+      className="W-32 h-32 object-contain hover:scale-105 transition-transform"
+    />
+         </Link>
 
         <nav className="hidden md:flex space-x-8 items-center">
           <NavLink to="/" className="hover:text-yellow-300 font-medium">
