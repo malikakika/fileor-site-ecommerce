@@ -18,9 +18,10 @@ export default function ProductCard({ product, price, onAddToCart }: ProductCard
   const { toggleFavorite, isFavorite } = useFavorites();
   const fav = isFavorite(product.id);
 
+  const user = getCurrentUser();
+
   const handleAddToCart = () => {
-    const user = getCurrentUser();
-    if (!user) {
+    if (!user || !user.id) {
       navigate('/login', { state: { next: location.pathname } });
       return;
     }
@@ -29,6 +30,13 @@ export default function ProductCard({ product, price, onAddToCart }: ProductCard
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // ✅ Vérifie aussi l’absence d’un token ou d’un ID utilisateur
+    if (!user || !user.id) {
+      navigate('/login', { state: { next: location.pathname } });
+      return;
+    }
+
     toggleFavorite(product);
   };
 
@@ -65,7 +73,7 @@ export default function ProductCard({ product, price, onAddToCart }: ProductCard
           className="flex items-center justify-center bg-sunset text-white px-4 py-2 rounded hover:bg-berry transition font-medium"
         >
           <ShoppingCart size={18} className="mr-2" />
-          {t('common.add_to_cart')}
+          {t('common.addToCart')}
         </button>
       </div>
     </div>

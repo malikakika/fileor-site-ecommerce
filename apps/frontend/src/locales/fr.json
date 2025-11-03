@@ -124,7 +124,7 @@
     "mapPlaceholder": "Carte à venir",
     "disclaimer": "Vos informations ne seront utilisées que pour répondre à votre demande. Elles ne seront jamais partagées avec des tiers."
   },
- "about": {
+  "about": {
     "title": "Bracelets brésiliens & Atébas",
     "subtitle": "Un univers de couleurs, d’énergie et de symboles à porter.",
     "bracelets": {
@@ -189,6 +189,8 @@
     "registering": "Création...",
     "alreadyAccount": "Déjà inscrit ?",
     "login": "Se connecter",
+    "loginTitle": "Se connecter",
+
     "errors": {
       "passwordMismatch": " Les mots de passe ne correspondent pas",
       "emailInUse": "Cet email est déjà utilisé",
