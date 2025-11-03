@@ -18,7 +18,7 @@ import CheckoutCODPage from '../pages/checkoutCODPage';
 import { CurrencyProvider } from '../context/currencyContext';
 import RequireAuth from '../components/requireAuth';
 import ProductDetails from '../pages/products/ProductDetailsPage';
-import FavoritesPage from '../pages/FavoritesPage';
+import FavoritesPage from '../pages/favoritesPage';
 import { FavoritesProvider } from '../context/favoritesContext';
 
 function App() {
