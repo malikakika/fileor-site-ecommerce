@@ -3,12 +3,18 @@
     "hero_title": "Bracelets brésiliens faits main",
     "hero_description": "Exprime ta personnalité avec un bracelet unique et coloré ",
     "hero_subtext": "Laisse parler tes couleurs et ton style ",
+    "creations_title": "Nos créations artisanales",
+    "custom": "Crée ton bracelet sur mesure",
+    "custom_text": "Choisis tes couleurs, ton message et ton style — un bijou unique, 100% personnalisé.",
 
     "personalize_button": "Personnaliser mon bracelet",
     "section_title": "Nos best-sellers",
-    "why_choose": "Pourquoi nous choisir ?",
-    "handmade": "Fait main",
-    "handmade_text": "Chaque bracelet est tissé à la main avec amour et passion.",
+    "handmade_story": "Chaque bracelet est une promesse : celle d’un geste lent, répété, tissé à la main. \nLà où d’autres produisent, nous créons, fil après fil.",
+    "values_story_2": "Comme une empreinte, chaque bracelet est unique.\nSes couleurs, ses nœuds, ses nuances racontent ton histoire.",
+    "values_story_3": "Fileor, c’est une famille.\nUne communauté d’âmes créatives, curieuses, qui partagent le goût du beau et du vrai.",
+    "values_closing_quote": "Ce n’est pas un simple bracelet.C’est un morceau de toi, tissé avec le monde.",
+    "values_closing_author": "— L’équipe Fileor",
+
     "unique": "Pièces uniques",
     "unique_text": "Aucun bracelet n’est identique, chacun raconte une histoire.",
     "community": "Communauté",
@@ -22,7 +28,20 @@
     "cta_text": "Personnalise ton bijou et exprime ton identité.",
     "instagram_title": "Découvre notre univers",
     "instagram_text": "Inspire-toi de nos créations et partage ton style.",
-    "follow_instagram": "Suivre sur Instagram"
+    "follow_instagram": "Suivre sur Instagram",
+    "why_choose": "Notre univers coloré et artisanal",
+    "handmade": "Fait main avec passion",
+    "handmade_text": "Chaque création Fileor est réalisée à la main avec patience, précision et amour du détail. Aucune machine, seulement du fil, des perles et beaucoup de créativité.",
+    "brazilian": "Bracelets brésiliens",
+    "brazilian_text": "Tissés à la main, symbole d’amitié et de liberté. Porte-les seuls ou en accumulation pour révéler ta personnalité.",
+    "alpha": "Bracelets Alpha",
+    "alpha_text": "Personnalise ton bracelet avec ton prénom ou un mot qui te représente. Un accessoire unique et expressif.",
+    "atebas": "Atébas",
+    "atebas_text": "Des mèches colorées en fil enroulé autour des cheveux — un art bohème venu d’Amérique du Sud, parfait pour un look libre et festif.",
+    "beads": "Bracelets en perles",
+    "beads_text": "Des combinaisons de perles naturelles et colorées pour un style élégant et moderne.",
+    "necklaces": "Colliers & accessoires",
+    "necklaces_text": "Pour compléter ton style, découvre nos colliers assortis et créations originales à ton image."
   },
 
   "bracelet": {

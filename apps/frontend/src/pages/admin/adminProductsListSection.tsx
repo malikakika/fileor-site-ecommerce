@@ -52,6 +52,7 @@ export default function AdminProductsListSection({ reloadKey }: Props) {
       slug: p.slug,
       priceCents: p.priceCents,
       description: p.description ?? '',
+      isBestSeller: p.isBestSeller ?? false,
     });
   };
   const cancelEdit = () => {
@@ -66,6 +67,7 @@ export default function AdminProductsListSection({ reloadKey }: Props) {
         slug: (editRow.slug ?? '').toString().trim(),
         priceCents: Math.max(0, Number(editRow.priceCents) || 0),
         description: (editRow.description ?? '')?.toString().trim() || null,
+        isBestSeller: !!editRow.isBestSeller, 
       };
       const updated = await httpPatchSecure<Product>(
         `/products/${id}`,
@@ -127,6 +129,7 @@ export default function AdminProductsListSection({ reloadKey }: Props) {
               <th className="text-left p-2">Slug</th>
               <th className="text-right p-2">Prix</th>
               <th className="text-left p-2">Description</th>
+              <th className="p-2 text-center">Best Seller</th>
               <th className="p-2">Actions</th>
             </tr>
           </thead>
@@ -204,6 +207,24 @@ export default function AdminProductsListSection({ reloadKey }: Props) {
                       <span className="line-clamp-2">
                         {p.description ?? '—'}
                       </span>
+                    )}
+                  </td>
+                  <td className="p-2 text-center">
+                    {isEditing ? (
+                      <input
+                        type="checkbox"
+                        checked={!!editRow.isBestSeller}
+                        onChange={(e) =>
+                          setEditRow((r) => ({
+                            ...r,
+                            isBestSeller: e.target.checked,
+                          }))
+                        }
+                      />
+                    ) : p.isBestSeller ? (
+                      '⭐'
+                    ) : (
+                      '—'
                     )}
                   </td>
 

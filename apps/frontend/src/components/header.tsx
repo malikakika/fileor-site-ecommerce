@@ -66,8 +66,9 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-gradient-to-r from-sunset to-berry text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <header className="bg-gradient-to-r from-sunset/90 to-berry text-white shadow-md"> 
+
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center ">
           <img
             src="/logo.png"

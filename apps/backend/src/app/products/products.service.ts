@@ -21,16 +21,21 @@ export class ProductsService {
     private readonly storage: StorageService, 
   ) {}
 
-  async findAll() {
-    const products = await this.repo.find({ relations: { category: true } });
+async findAll(filter?: { isBestSeller?: boolean }) {
+  const where = filter?.isBestSeller ? { isBestSeller: true } : {};
 
-    return Promise.all(
-      products.map(async (p) => {
-        p.images = await this.signImages(p.images);
-        return p;
-      }),
-    );
-  }
+  const products = await this.repo.find({
+    where,
+    relations: { category: true },
+  });
+
+  return Promise.all(
+    products.map(async (p) => {
+      p.images = await this.signImages(p.images);
+      return p;
+    }),
+  );
+}
 
   async create(dto: CreateProductDto) {
     const exists = await this.repo.exist({ where: { slug: dto.slug } });
@@ -53,6 +58,7 @@ export class ProductsService {
       description: dto.description ?? undefined,
       images,
       category,
+        isBestSeller: dto.isBestSeller ?? false,
     };
 
     const product = this.repo.create(partial);
@@ -111,6 +117,10 @@ export class ProductsService {
       images: images ?? product.images,
       category:
         category === undefined ? product.category : category || undefined,
+         isBestSeller:
+    dto.isBestSeller === undefined
+      ? product.isBestSeller
+      : dto.isBestSeller,
     };
 
     const merged = this.repo.merge(product, patch);

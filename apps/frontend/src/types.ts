@@ -9,7 +9,10 @@ export type Product = {
   images: string[];
   description?: string | null;
   category?: Category | null;
+   isBestSeller?: boolean; 
 };
+
+
 
 export type UploadResponse = { url: string };
 

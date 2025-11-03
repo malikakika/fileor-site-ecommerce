@@ -4,19 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/my-ecommerce"
-    },
-    {
-      "path": "./apps/backend-e2e"
-    },
-    {
       "path": "./apps/frontend"
     },
     {
       "path": "./apps/backend"
-    },
-    {
-      "path": "./apps/frontend-e2e"
     }
   ]
 }

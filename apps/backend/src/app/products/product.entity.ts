@@ -26,4 +26,7 @@ export class Product {
 
   @ManyToOne(() => Category, (c) => c.products, { nullable: true, eager: true })
   category?: Category;
+  
+    @Column({ default: false })
+  isBestSeller!: boolean;
 }
