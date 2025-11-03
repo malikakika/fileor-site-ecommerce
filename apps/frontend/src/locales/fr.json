@@ -124,22 +124,32 @@
     "mapPlaceholder": "Carte à venir",
     "disclaimer": "Vos informations ne seront utilisées que pour répondre à votre demande. Elles ne seront jamais partagées avec des tiers."
   },
-  "about": {
-    "title": "À propos",
-    "subtitle": "Des bracelets qui racontent une histoire : la tienne.",
-    "storyTitle": "Notre histoire",
-    "story": "Fileor est né d’un amour pour l’artisanat et la couleur. Chaque bracelet est tissé à la main, avec patience et passion, pour créer une pièce unique qui te ressemble. Nous croyons aux objets qui durent, au détail qui fait sourire, et à la personnalisation comme vraie signature.",
+ "about": {
+    "title": "Bracelets brésiliens & Atébas",
+    "subtitle": "Un univers de couleurs, d’énergie et de symboles à porter.",
+    "bracelets": {
+      "title": "Les bracelets brésiliens",
+      "intro": "Les bracelets brésiliens sont bien plus que de simples bijoux : ce sont des fils d’amitié, de chance et de liberté. Originaires d’Amérique latine, ils se portent comme un porte-bonheur. On fait un vœu au moment de les nouer, et lorsque le bracelet se détache naturellement, le vœu est censé se réaliser.",
+      "howTitle": "Comment attacher un bracelet brésilien ?",
+      "howDesc": "1️⃣ Place le bracelet autour de ton poignet.\n2️⃣ Demande à quelqu’un de t’aider à le nouer.\n3️⃣ Fais un double nœud solide, sans trop serrer.\n4️⃣ Coupe le surplus de fils.\n💫 Pense à ton vœu pendant que tu le portes, il se réalisera quand le bracelet se détachera tout seul."
+    },
+    "atebas": {
+      "title": "Les atébas",
+      "intro": "Les atébas (ou dread wraps) sont des fils colorés enroulés autour d’une mèche de cheveux. Issues des cultures hippies et ethniques, elles symbolisent la créativité et la liberté. Chaque atéba est unique, colorée et souvent décorée de perles ou de petits symboles.",
+      "howTitle": "Comment attacher une atéba ?",
+      "howDesc": "1️⃣ Sépare une mèche fine de cheveux.\n2️⃣ Commence par tresser 2 à 3 cm à la base.\n3️⃣ Enroule les fils colorés autour de la mèche.\n4️⃣ Fixe le bout avec un petit nœud ou une perle.\n Pour la retirer, il suffit de dérouler doucement les fils sans abîmer les cheveux."
+    },
     "values": {
       "craft": "Artisanat",
-      "craftDesc": "Tissage à la main, finitions soignées, matériaux choisis.",
+      "craftDesc": "Chaque création est tissée à la main avec patience et passion.",
       "creativity": "Créativité",
-      "creativityDesc": "Des motifs inspirés, une palette vibrante, des idées sur-mesure.",
+      "creativityDesc": "Les couleurs et les motifs reflètent la personnalité de chacun.",
       "quality": "Qualité",
-      "qualityDesc": "Durabilité, confort et rendu fidèle à ton design."
+      "qualityDesc": "Des matériaux durables et doux pour un confort optimal."
     },
-    "ctaTitle": "Envie d’en voir plus ?",
-    "ctaSubtitle": "Suis nos créations et coulisses sur Instagram.",
-    "follow": "Nous suivre"
+    "ctaTitle": "Découvrez l’univers Fileor 🌿",
+    "ctaSubtitle": "Des bracelets et atébas faits main. Portez vos couleurs, partagez vos émotions.",
+    "follow": "Suivre sur Instagram"
   },
   "cart": {
     "title": "Mon panier",

@@ -68,7 +68,6 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-sunset to-berry text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo */}
         <Link to="/" className="flex items-center ">
           <img
             src="/logo.png"
@@ -77,7 +76,6 @@ export default function Header() {
           />
         </Link>
 
-        {/* Navigation */}
         <nav className="hidden md:flex space-x-8 items-center">
           <NavLink to="/" className="hover:text-yellow-300 font-medium">
             {t('nav.home')}

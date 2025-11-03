@@ -123,21 +123,31 @@
     "disclaimer": "Your information will only be used to answer your request. It will never be shared with third parties."
   },
   "about": {
-    "title": "About",
-    "subtitle": "Bracelets that tell a story — yours.",
-    "storyTitle": "Our story",
-    "story": "Fileor was born from a love of craft and color. Every bracelet is hand-woven with patience and passion to create a unique piece that reflects you. We believe in things that last, in details that spark joy, and in personalization as your true signature.",
+    "title": "Brazilian Bracelets & Atébas",
+    "subtitle": "A world of color, energy, and meaning you can wear.",
+    "bracelets": {
+      "title": "Brazilian Bracelets",
+      "intro": "Brazilian bracelets are more than simple accessories: they’re threads of friendship, luck, and freedom. Born in Latin America, they are worn as lucky charms. When you tie it, make a wish — when it naturally falls off, your wish is said to come true.",
+      "howTitle": "How to tie a Brazilian bracelet?",
+      "howDesc": "1️⃣ Place the bracelet around your wrist.\n2️⃣ Ask someone to help you tie it.\n3️⃣ Make a double knot — tight but comfortable.\n4️⃣ Cut the extra threads.\n💫 Think about your wish as you wear it, it will come true when the bracelet falls off."
+    },
+    "atebas": {
+      "title": "Atébas",
+      "intro": "Atébas (also called dread wraps) are colorful threads wrapped around a lock of hair. Rooted in hippie and ethnic cultures, they symbolize creativity and freedom. Each one is unique and can be decorated with beads or charms.",
+      "howTitle": "How to attach an atéba?",
+      "howDesc": "1️⃣ Separate a thin lock of hair.\n2️⃣ Braid 2–3 cm at the root.\n3️⃣ Wrap colored threads along the length.\n4️⃣ Secure the end with a knot or bead.\nTo remove it, simply unwind the threads gently."
+    },
     "values": {
       "craft": "Craftsmanship",
-      "craftDesc": "Hand-woven, neat finishing, carefully selected materials.",
+      "craftDesc": "Every creation is handmade with patience and care.",
       "creativity": "Creativity",
-      "creativityDesc": "Inspiring patterns, a vibrant palette, custom ideas.",
+      "creativityDesc": "Colors and patterns reflect each person’s energy and mood.",
       "quality": "Quality",
-      "qualityDesc": "Durability, comfort, and a result faithful to your design."
+      "qualityDesc": "Durable and soft materials for lasting comfort."
     },
-    "ctaTitle": "Want to see more?",
-    "ctaSubtitle": "Follow our creations and behind-the-scenes on Instagram.",
-    "follow": "Follow us"
+    "ctaTitle": "Discover Fileor’s universe 🌿",
+    "ctaSubtitle": "Handmade bracelets and atébas. Wear your colors, express your soul.",
+    "follow": "Follow on Instagram"
   },
   "cart": {
     "title": "My Cart",

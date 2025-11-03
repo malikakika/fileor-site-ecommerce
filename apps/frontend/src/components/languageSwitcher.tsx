@@ -32,9 +32,9 @@ export default function LanguageSwitcher() {
         <option value="en" className="text-black">
           English
         </option>
-        <option value="ar" className="text-black">
+        {/* <option value="ar" className="text-black">
           العربية
-        </option>
+        </option> */}
       </select>
       <Globe
         size={18}
