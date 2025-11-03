@@ -21,7 +21,7 @@ export default function ProductCard({ product, price, onAddToCart }: ProductCard
   const handleAddToCart = () => {
     const user = getCurrentUser();
     if (!user) {
-      navigate('/register', { state: { next: location.pathname } });
+      navigate('/login', { state: { next: location.pathname } });
       return;
     }
     onAddToCart?.(product.id);
