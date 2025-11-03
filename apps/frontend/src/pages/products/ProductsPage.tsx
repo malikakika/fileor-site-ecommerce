@@ -7,6 +7,7 @@ import { Product } from '../../types';
 import { ensureDisplayUrl } from '../../services/uploads.service';
 import { getCurrentUser } from '../../services/auth.service';
 import AuthPromptModal from '../../components/authPromptModal';
+import ProductCard from '../../components/productCard';
 
 const isHttpUrl = (s?: string) => !!s && /^https?:\/\//i.test(s);
 
@@ -20,12 +21,14 @@ function toCents(raw: unknown): number {
   }
   return 0;
 }
+
 function priceCentsOf(p: any): number {
   if (p?.priceCents != null) return toCents(p.priceCents);
   if (p?.price_cents != null) return toCents(p.price_cents);
   if (p?.price != null) return toCents(p.price);
   return 0;
 }
+
 function unitPriceNumber(p: any): number {
   return Math.max(0, priceCentsOf(p)) / 100;
 }
@@ -212,46 +215,17 @@ export default function ProductsPage() {
             const priceLabel = format(priceInUserCurrency, currency);
 
             return (
-              <div
+              <ProductCard
                 key={p.id}
-                className="bg-white rounded-lg shadow border border-sand hover:shadow-lg transition"
-              >
-                {cover && (
-                  <img
-                    src={cover}
-                    alt={p.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                    loading="lazy"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display =
-                        'none';
-                    }}
-                  />
-                )}
-
-                <div className="p-4">
-                  <div className="text-xs text-ink/60 mb-1">
-                    {p.category?.name}
-                  </div>
-                  <h2 className="text-lg font-semibold mb-2">
-                    {p.title?.trim() || p.slug}
-                  </h2>
-
-                  <p className="text-sunset font-bold mb-4">{priceLabel}</p>
-
-                  <button
-                    type="button"
-                    className="bg-sunset text-white px-4 py-2 rounded hover:bg-berry transition"
-                    onClick={() => handleAddToCart(p, cover)}
-                  >
-                    {t('products.addToCart') || 'Ajouter au panier'}
-                  </button>
-                </div>
-              </div>
+                product={p}
+                price={priceLabel}
+                onAddToCart={() => handleAddToCart(p, cover)}
+              />
             );
           })}
         </div>
       )}
+
       <AuthPromptModal
         open={showAuthPrompt}
         onClose={() => setShowAuthPrompt(false)}

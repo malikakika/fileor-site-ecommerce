@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -21,6 +22,15 @@ export class ProductsController {
     return this.svc.findAll();
   }
 
+  @Get(':slug')
+  async findOneBySlug(@Param('slug') slug: string) {
+    const product = await this.svc.findOneBySlug(slug);
+    if (!product) {
+      throw new NotFoundException(`Produit avec slug "${slug}" introuvable`);
+    }
+    return product;
+  }
+
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.svc.create(dto);
@@ -29,7 +39,7 @@ export class ProductsController {
   @Patch(':id')
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() dto: UpdateProductDto
+    @Body() dto: UpdateProductDto,
   ) {
     return this.svc.update(id, dto);
   }

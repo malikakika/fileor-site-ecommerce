@@ -5,6 +5,7 @@ import { Product } from './app/products/product.entity';
 import { Category } from './app/categories/category.entity';
 import { User } from './app/users/user.entity';
 import { Order } from './app/orders/order.entity';
+import { Favorite } from './app/favorites/favorite.entity';
 
 config();
 
@@ -23,7 +24,7 @@ export const ormConfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'myecom',
-  entities: [Product, Category, User, Order],
+  entities: [Product, Category, User, Order,Favorite],
   synchronize: true,
   logging: true,
 };

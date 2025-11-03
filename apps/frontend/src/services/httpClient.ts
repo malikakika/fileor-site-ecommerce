@@ -66,15 +66,17 @@ export async function httpGetSecure<T>(path: string): Promise<T> {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }
-
 export async function httpPostSecure<T>(
   path: string,
   body: unknown
 ): Promise<T> {
   const token = getToken();
+  if (!token) throw new Error('No auth token found'); 
+
   const useForm = isFormData(body);
-  const headers: Record<string, string> = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+  };
   if (!useForm) headers['Content-Type'] = 'application/json';
 
   const res = await fetch(`${API_URL}${path}`, {
@@ -82,6 +84,11 @@ export async function httpPostSecure<T>(
     headers,
     body: useForm ? (body as FormData) : JSON.stringify(body),
   });
+
+  if (res.status === 401) {
+    clearSession();
+    throw new Error('Unauthorized');
+  }
 
   if (!res.ok) throw new Error((await res.text()) || `HTTP ${res.status}`);
   return res.json();

@@ -11,6 +11,7 @@ import { DesignsModule } from './design/designs.module';
 import { ContactModule } from './contact/contact.module';
 import { ChatModule } from './chat/chat.module';
 import { OrdersModule } from './orders/orders.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { OrdersModule } from './orders/orders.module';
     DesignsModule,
     ContactModule,
     ChatModule,
-    OrdersModule
+    OrdersModule,
+    FavoritesModule
     
   ],
 })

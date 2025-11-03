@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Favorite } from '../favorites/favorite.entity';
 
 export type Role = 'ADMIN' | 'CUSTOMER';
 
@@ -24,6 +25,15 @@ export class User {
   @Column({ type: 'timestamptz', default: () => 'now()' })
   createdAt!: Date;
 
-  @Column({ type: 'timestamptz', default: () => 'now()', onUpdate: 'now()' })
+  @Column({
+    type: 'timestamptz',
+    default: () => 'now()',
+    onUpdate: 'now()',
+  })
   updatedAt!: Date;
+
+  @OneToMany(() => Favorite, (favorite) => favorite.user, {
+    cascade: true,
+  })
+  favorites!: Favorite[];
 }

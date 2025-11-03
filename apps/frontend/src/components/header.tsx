@@ -7,8 +7,10 @@ import {
   UserPlus,
   LogOut,
   MessageCircle,
+  Heart,
 } from 'lucide-react';
 import { useCart } from '../context/cartContext';
+import { useFavorites } from '../context/favoritesContext';
 import LanguageSwitcher from './languageSwitcher';
 import {
   getCurrentUser,
@@ -20,6 +22,7 @@ export default function Header() {
   const { t } = useTranslation();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { cart } = useCart();
+  const { favorites } = useFavorites();
   const navigate = useNavigate();
 
   const [user, setUser] = useState(getCurrentUser());
@@ -46,6 +49,8 @@ export default function Header() {
     [cart]
   );
 
+  const favCount = favorites.length;
+
   const initials = useMemo(() => {
     const n = user?.name?.trim() || user?.email || '';
     const parts = n.split(/\s+/).filter(Boolean);
@@ -63,27 +68,26 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-sunset to-berry text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-         <Link to="/" className="flex items-center ">
-    <img
-      src="public/logo.png" 
-      alt="Filéor logo"
-      className="W-32 h-32 object-contain hover:scale-105 transition-transform"
-    />
-         </Link>
+        {/* Logo */}
+        <Link to="/" className="flex items-center ">
+          <img
+            src="/logo.png"
+            alt="Filéor logo"
+            className="w-32 h-32 object-contain hover:scale-105 transition-transform"
+          />
+        </Link>
 
+        {/* Navigation */}
         <nav className="hidden md:flex space-x-8 items-center">
           <NavLink to="/" className="hover:text-yellow-300 font-medium">
             {t('nav.home')}
           </NavLink>
-
           <NavLink to="/editor" className="hover:text-yellow-300 font-medium">
             {t('nav.customize')}
           </NavLink>
-
           <NavLink to="/products" className="hover:text-yellow-300 font-medium">
             {t('nav.products')}
           </NavLink>
-
           <NavLink to="/about" className="hover:text-yellow-300 font-medium">
             {t('nav.about')}
           </NavLink>
@@ -94,30 +98,44 @@ export default function Header() {
 
         <div className="flex items-center space-x-3">
           {user && (
-            <button
-              onClick={() => navigate('/chat')}
-              className="relative hover:text-yellow-300 focus:outline-none"
-              aria-label="Ouvrir le chat de support"
-              title="Support"
-            >
-              <MessageCircle size={26} />
-            </button>
-          )}
+            <>
+              <button
+                onClick={() => navigate('/chat')}
+                className="relative hover:text-yellow-300 focus:outline-none"
+                aria-label="Ouvrir le chat de support"
+                title="Support"
+              >
+                <MessageCircle size={26} />
+              </button>
 
-          {user && (
-            <button
-              onClick={() => navigate('/cart')}
-              className="relative hover:text-yellow-300 focus:outline-none"
-              aria-label="Ouvrir le panier"
-              title={t('nav.cart') || 'Panier'}
-            >
-              <ShoppingCart size={26} />
-              {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                  {itemCount}
-                </span>
-              )}
-            </button>
+              <button
+                onClick={() => navigate('/favorites')}
+                className="relative hover:text-yellow-300 focus:outline-none"
+                aria-label="Ouvrir les favoris"
+                title="Favoris"
+              >
+                <Heart size={26} />
+                {favCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {favCount}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => navigate('/cart')}
+                className="relative hover:text-yellow-300 focus:outline-none"
+                aria-label="Ouvrir le panier"
+                title={t('nav.cart') || 'Panier'}
+              >
+                <ShoppingCart size={26} />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+            </>
           )}
 
           <LanguageSwitcher />

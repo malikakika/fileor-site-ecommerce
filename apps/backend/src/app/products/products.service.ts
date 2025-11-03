@@ -9,16 +9,27 @@ import { Product } from './product.entity';
 import { Category } from '../categories/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { StorageService } from '../storage/storage.service'; 
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectRepository(Product) private readonly repo: Repository<Product>,
-    @InjectRepository(Category) private readonly cats: Repository<Category>
+    @InjectRepository(Product)
+    private readonly repo: Repository<Product>,
+    @InjectRepository(Category)
+    private readonly cats: Repository<Category>,
+    private readonly storage: StorageService, 
   ) {}
 
-  findAll() {
-    return this.repo.find({ relations: { category: true } });
+  async findAll() {
+    const products = await this.repo.find({ relations: { category: true } });
+
+    return Promise.all(
+      products.map(async (p) => {
+        p.images = await this.signImages(p.images);
+        return p;
+      }),
+    );
   }
 
   async create(dto: CreateProductDto) {
@@ -45,14 +56,27 @@ export class ProductsService {
     };
 
     const product = this.repo.create(partial);
-    return this.repo.save(product);
+    const saved = await this.repo.save(product);
+
+    saved.images = await this.signImages(saved.images);
+    return saved;
+  }
+
+  async findOneBySlug(slug: string) {
+    const product = await this.repo.findOne({
+      where: { slug },
+      relations: ['category'],
+    });
+    if (!product) throw new NotFoundException('Product not found');
+
+    product.images = await this.signImages(product.images);
+    return product;
   }
 
   async update(id: string, dto: UpdateProductDto) {
     const product = await this.repo.findOne({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
 
-    // Unicité du slug (si fourni)
     if (dto.slug) {
       const exists = await this.repo.exist({
         where: { slug: dto.slug, id: Not(id) },
@@ -65,9 +89,7 @@ export class ProductsService {
       if (dto.categoryId === null) {
         category = null;
       } else {
-        const found = await this.cats.findOne({
-          where: { id: dto.categoryId },
-        });
+        const found = await this.cats.findOne({ where: { id: dto.categoryId } });
         if (!found) throw new NotFoundException('Category not found');
         category = found;
       }
@@ -92,12 +114,30 @@ export class ProductsService {
     };
 
     const merged = this.repo.merge(product, patch);
-    return this.repo.save(merged);
+    const updated = await this.repo.save(merged);
+
+    updated.images = await this.signImages(updated.images);
+    return updated;
   }
 
   async remove(id: string) {
     const product = await this.repo.findOne({ where: { id } });
     if (!product) throw new NotFoundException('Product not found');
     await this.repo.remove(product);
+  }
+
+  private async signImages(images?: string[] | null): Promise<string[]> {
+    if (!images?.length) return [];
+    const signed = await Promise.all(
+      images.map(async (path) => {
+        try {
+          const { url } = await this.storage.sign(path);
+          return url;
+        } catch {
+          return path; 
+        }
+      }),
+    );
+    return signed;
   }
 }
