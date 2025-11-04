@@ -24,11 +24,17 @@ RUN npx nx build frontend --configuration=production
 
 # ---- Runtime stage ----
 FROM nginx:alpine
+
+# Copier le build React dans NGINX
 COPY --from=build /repo/dist/apps/frontend /usr/share/nginx/html
-COPY apps/frontend/public /usr/share/nginx/html/public
 
+# ✅ Corrige la conf par défaut pour gérer le fallback SPA (comme sur Roadshine)
+RUN sed -i 's#try_files \$uri \$uri/ =404;#try_files \$uri /index.html;#' /etc/nginx/conf.d/default.conf
 
-# React Router / SPA fix
-RUN sed -i 's/try_files \$uri \$uri\/ =404;/try_files \$uri \/index.html;/' /etc/nginx/conf.d/default.conf
+# (optionnel mais utile)
+RUN sed -i '/server {/a \    gzip on;\n    gzip_types text/plain application/javascript text/css application/json image/svg+xml;\n    gzip_min_length 1024;' /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
+
+
