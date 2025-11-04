@@ -205,13 +205,11 @@
     "profile": "View Profile",
     "account": "My Account",
     "admin": "Admin",
-    "loginTitle": "Login",
     "email": "Email",
     "password": "Password",
     "loggingIn": "Logging in...",
     "noAccount": "No account?",
 
-    "registerTitle": "Create an account",
     "nameOptional": "Name (optional)",
 
     "registering": "Registering...",
@@ -221,12 +219,29 @@
       "invalidCredentials": " Invalid email or password",
       "generic": "Could not log in. Please try again later.",
       "emailExists": "This email is already in use",
-      "genericRegister": "Could not create account. Please try again later."
+      "genericRegister": "Could not create account. Please try again later.",
+      "googleFailed": "Google login failed.",
+      "passwordMismatch": "Passwords do not match."
     },
     "requiredTitle": "Sign in required",
     "requiredMessage": "You need to sign in to add items to your cart and checkout.",
     "goLogin": "Sign in",
-    "later": "Later"
+    "later": "Later",
+     "welcomeTo": "Welcome to",
+    "welcomeBack": "Welcome back to",
+    "loginSubtitle": "Log in to access your personal space and discover our exclusive new creations.",
+    "registerSubtitle": "Join our community and explore unique, handcrafted and inspiring creations.",
+    "loginTitle": "Sign in to your account",
+    "registerTitle": "Create your account",
+    "fullName": "Full name",
+   
+    "confirmPassword": "Confirm password",
+    "agreeTo": "I agree to all",
+    "terms": "Terms of Service",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "creating": "Creating account..."
+   
   },
 
   "account": {

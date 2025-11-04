@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -13,6 +6,9 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { UsersService } from '../users/users.service';
 import { IsString, MinLength } from 'class-validator';
 import type { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { OAuth2Client } from 'google-auth-library';
+import { UnauthorizedException } from '@nestjs/common';
 
 class ChangePasswordDto {
   @IsString()
@@ -23,13 +19,11 @@ class ChangePasswordDto {
   newPassword!: string;
 }
 
-
 interface JwtUserPayload {
   userId: string;
   email: string;
   role: string;
 }
-
 
 interface AuthenticatedRequest extends Request {
   user: JwtUserPayload;
@@ -39,24 +33,60 @@ interface AuthenticatedRequest extends Request {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly users: UsersService,
+    private readonly users: UsersService
   ) {}
 
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin() {
+    // redirigé automatiquement vers Google
+  }
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleCallback(@Req() req: Request) {
+    const user = req.user;
+    return this.authService.socialLogin(user);
+  }
   @Post('login')
   async login(@Body() body: LoginDto) {
     const user = await this.authService.validateUser(
       body.email.trim().toLowerCase(),
-      body.password,
+      body.password
     );
     return this.authService.login(user);
   }
+
+  @Post('google/token')
+async googleToken(@Body('idToken') idToken: string) {
+  if (!idToken) throw new UnauthorizedException('Missing Google token');
+
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+
+  const payload = ticket.getPayload();
+  if (!payload || !payload.email) {
+    throw new UnauthorizedException('Invalid Google token');
+  }
+
+  const user = {
+    email: payload.email,
+    name: payload.name,
+    picture: payload.picture,
+    provider: 'google',
+  };
+
+  return this.authService.socialLogin(user);
+}
 
   @Post('register')
   async register(@Body() body: RegisterDto) {
     const created = await this.authService.register(
       body.email.trim().toLowerCase(),
       body.password,
-      body.name?.trim(),
+      body.name?.trim()
     );
 
     return {
@@ -67,7 +97,6 @@ export class AuthController {
     };
   }
 
-  // 🔹 Récupérer l’utilisateur connecté
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async me(@Req() req: AuthenticatedRequest) {
@@ -82,12 +111,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async changePassword(
     @Req() req: AuthenticatedRequest,
-    @Body() body: ChangePasswordDto,
+    @Body() body: ChangePasswordDto
   ) {
     await this.authService.changePassword(
       req.user.userId,
       body.oldPassword,
-      body.newPassword,
+      body.newPassword
     );
     return { ok: true };
   }

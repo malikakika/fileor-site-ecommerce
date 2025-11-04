@@ -36,4 +36,10 @@ export class User {
     cascade: true,
   })
   favorites!: Favorite[];
+
+   @Column({ nullable: true })
+  provider?: string;
+
+  @Column({ nullable: true })
+  picture?: string;
 }

@@ -61,4 +61,32 @@ export class AuthService {
 
     return { ok: true };
   }
+
+  async socialLogin(oauthUser: any) {
+  let user = await this.usersService.findByEmail(oauthUser.email);
+
+  if (!user) {
+    user = await this.usersService.create({
+      email: oauthUser.email,
+      name: oauthUser.name,
+      password: '', 
+      role: 'CUSTOMER',
+      provider: oauthUser.provider,
+      picture: oauthUser.picture,
+    });
+  }
+
+  const payload = { sub: user.id, email: user.email, role: user.role };
+  return {
+    access_token: this.jwtService.sign(payload),
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      picture: user.picture,
+    },
+  };
+}
+
 }

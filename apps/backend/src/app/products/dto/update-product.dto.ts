@@ -31,8 +31,10 @@ export class UpdateProductDto {
   @IsOptional()
   @IsString()
   categoryId?: string | null;
-  
+
     @IsOptional()
   @IsBoolean()
   isBestSeller?: boolean;
+
+  
 }

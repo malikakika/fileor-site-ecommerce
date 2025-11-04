@@ -12,6 +12,8 @@ type CreateUserInput = {
   password: string;
   name?: string;
   role?: Role;
+  provider?: string;
+  picture?: string;
 };
 
 type UpdateUserInput = Partial<

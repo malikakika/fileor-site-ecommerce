@@ -199,7 +199,6 @@
   },
 
   "auth": {
-    "registerTitle": "Créer un compte",
     "nameOptional": "Nom (optionnel)",
     "email": "Email",
     "password": "Mot de passe",
@@ -208,14 +207,15 @@
     "registering": "Création...",
     "alreadyAccount": "Déjà inscrit ?",
     "login": "Se connecter",
-    "loginTitle": "Se connecter",
 
     "errors": {
       "passwordMismatch": " Les mots de passe ne correspondent pas",
       "emailInUse": "Cet email est déjà utilisé",
       "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
       "validation": "Veuillez vérifier le formulaire",
-      "generic": "Une erreur est survenue, réessayez"
+      "generic": "Une erreur est survenue, réessayez",
+       "invalidCredentials": "Identifiants incorrects.",
+      "googleFailed": "Échec de la connexion Google."
     },
     "success": {
       "register": "Compte créé ! Redirection..."
@@ -226,7 +226,21 @@
     "requiredTitle": "Connexion requise",
     "requiredMessage": "Vous devez être connecté(e) pour ajouter un article au panier et finaliser votre commande.",
     "goLogin": "Se connecter",
-    "later": "Plus tard"
+    "later": "Plus tard",
+      "welcomeTo": "Bienvenue sur",
+    "welcomeBack": "Heureux de vous revoir sur",
+    "loginSubtitle": "Connectez-vous pour accéder à votre espace personnel et découvrir nos nouveautés exclusives.",
+    "registerSubtitle": "Rejoignez notre communauté et découvrez des créations uniques, artisanales et inspirantes.",
+    "loginTitle": "Connectez-vous à votre compte",
+    "registerTitle": "Créez votre compte",
+    "fullName": "Nom complet",
+    "agreeTo": "J’accepte les",
+    "terms": "Conditions d’utilisation",
+    "signIn": "Connexion",
+    "signUp": "S’inscrire",
+    "loggingIn": "Connexion en cours...",
+    "creating": "Création du compte...",
+    "noAccount": "Vous n’avez pas encore de compte ?"
   },
 
   "account": {

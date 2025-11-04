@@ -6,7 +6,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-16 bg-gradient-to-br from-sunset to-berry text-white">
+    <footer className="bg-gradient-to-br from-sunset to-berry text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div>
           <h3 className="text-2xl font-extrabold tracking-wide">Fileor</h3>
