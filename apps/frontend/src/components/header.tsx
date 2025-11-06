@@ -8,6 +8,8 @@ import {
   LogOut,
   MessageCircle,
   Heart,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useCart } from '../context/cartContext';
 import { useFavorites } from '../context/favoritesContext';
@@ -20,12 +22,14 @@ import {
 
 export default function Header() {
   const { t } = useTranslation();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { cart } = useCart();
-  const { favorites } = useFavorites();
   const navigate = useNavigate();
 
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(getCurrentUser());
+
+  const { cart } = useCart();
+  const { favorites } = useFavorites();
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
@@ -66,18 +70,17 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-gradient-to-r from-sunset/90 to-berry text-white shadow-md"> 
-
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="flex items-center ">
+    <header className="bg-gradient-to-r from-sunset/90 to-berry text-white shadow-md fixed top-0 w-full z-50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-3 md:py-2">
+        <Link to="/" className="flex items-center">
           <img
             src="/logo.png"
             alt="Filéor logo"
-            className="w-32 h-32 object-contain hover:scale-105 transition-transform"
+            className="w-24 h-24 object-contain hover:scale-105 transition-transform"
           />
         </Link>
 
-        <nav className="hidden md:flex space-x-8 items-center">
+        <nav className="hidden md:flex space-x-8 items-center text-lg">
           <NavLink to="/" className="hover:text-yellow-300 font-medium">
             {t('nav.home')}
           </NavLink>
@@ -101,19 +104,17 @@ export default function Header() {
               <button
                 onClick={() => navigate('/chat')}
                 className="relative hover:text-yellow-300 focus:outline-none"
-                aria-label="Ouvrir le chat de support"
-                title="Support"
+                aria-label="Support"
               >
-                <MessageCircle size={26} />
+                <MessageCircle size={24} />
               </button>
 
               <button
                 onClick={() => navigate('/favorites')}
                 className="relative hover:text-yellow-300 focus:outline-none"
-                aria-label="Ouvrir les favoris"
-                title="Favoris"
+                aria-label="Favoris"
               >
-                <Heart size={26} />
+                <Heart size={24} />
                 {favCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     {favCount}
@@ -124,10 +125,9 @@ export default function Header() {
               <button
                 onClick={() => navigate('/cart')}
                 className="relative hover:text-yellow-300 focus:outline-none"
-                aria-label="Ouvrir le panier"
-                title={t('nav.cart') || 'Panier'}
+                aria-label="Panier"
               >
-                <ShoppingCart size={26} />
+                <ShoppingCart size={24} />
                 {itemCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     {itemCount}
@@ -144,18 +144,16 @@ export default function Header() {
               <button
                 onClick={() => navigate('/login')}
                 className="flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded"
-                title={t('auth.login') || 'Se connecter'}
               >
                 <LogIn size={16} />
-                <span className="hidden sm:inline">{t('auth.login')}</span>
+                <span>{t('auth.login')}</span>
               </button>
               <button
                 onClick={() => navigate('/register')}
                 className="flex items-center gap-1 bg-yellow-400 text-ink hover:bg-yellow-300 px-3 py-1.5 rounded"
-                title={t('auth.register') || 'Créer un compte'}
               >
                 <UserPlus size={16} />
-                <span className="hidden sm:inline">{t('auth.register')}</span>
+                <span>{t('auth.register')}</span>
               </button>
             </div>
           ) : (
@@ -207,50 +205,90 @@ export default function Header() {
               )}
             </div>
           )}
+
+          <button
+            className="md:hidden p-2 hover:text-yellow-300"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+          >
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
       </div>
 
-      <div className="md:hidden px-4 pb-3 flex gap-3">
-        {!user ? (
-          <>
-            <button
-              onClick={() => navigate('/login')}
-              className="flex-1 bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
-            >
-              {t('auth.login')}
-            </button>
-            <button
-              onClick={() => navigate('/register')}
-              className="flex-1 bg-yellow-400 text-ink hover:bg-yellow-300 px-3 py-2 rounded"
-            >
-              {t('auth.register')}
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => navigate('/account')}
-              className="flex-1 bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
-            >
-              {t('auth.profile')}
-            </button>
-            {user.role === 'ADMIN' && (
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-berry/90 text-white px-5 py-4 flex flex-col space-y-3 border-t border-white/20 animate-fadeIn">
+          <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>
+            {t('nav.home')}
+          </NavLink>
+          <NavLink to="/editor" onClick={() => setMobileMenuOpen(false)}>
+            {t('nav.customize')}
+          </NavLink>
+          <NavLink to="/products" onClick={() => setMobileMenuOpen(false)}>
+            {t('nav.products')}
+          </NavLink>
+          <NavLink to="/about" onClick={() => setMobileMenuOpen(false)}>
+            {t('nav.about')}
+          </NavLink>
+          <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)}>
+            {t('nav.contact')}
+          </NavLink>
+
+          {!user ? (
+            <>
               <button
-                onClick={() => navigate('/admin')}
-                className="flex-1 bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate('/login');
+                }}
+                className="bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
               >
-                {t('auth.admin')}
+                {t('auth.login')}
               </button>
-            )}
-            <button
-              onClick={handleLogout}
-              className="flex-1 bg-white/10 hover:bg-white/20 px-3 py-2 rounded text-red-200"
-            >
-              {t('auth.logout')}
-            </button>
-          </>
-        )}
-      </div>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate('/register');
+                }}
+                className="bg-yellow-400 text-ink hover:bg-yellow-300 px-3 py-2 rounded"
+              >
+                {t('auth.register')}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate('/account');
+                }}
+                className="bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
+              >
+                {t('auth.profile')}
+              </button>
+              {user.role === 'ADMIN' && (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigate('/admin');
+                  }}
+                  className="bg-white/10 hover:bg-white/20 px-3 py-2 rounded"
+                >
+                  {t('auth.admin')}
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="bg-white/10 hover:bg-white/20 px-3 py-2 rounded text-red-200"
+              >
+                {t('auth.logout')}
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }
