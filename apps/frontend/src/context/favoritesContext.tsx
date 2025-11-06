@@ -5,10 +5,10 @@ import {
   useMemo,
   useState,
   ReactNode,
-} from "react";
-import { favoritesService } from "../services/favorites.service";
-import { AUTH_EVENT, getToken } from "../services/auth.service";
-import type { Product } from "../types";
+} from 'react';
+import { favoritesService } from '../services/favorites.service';
+import { AUTH_EVENT, getToken } from '../services/auth.service';
+import type { Product } from '../types';
 
 type FavoritesContextType = {
   favorites: Product[];
@@ -24,7 +24,7 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined
 );
 
-const GUEST_FAV_KEY = "guest_favorites";
+const GUEST_FAV_KEY = 'guest_favorites';
 
 function readGuestFavorites(): Product[] {
   try {
@@ -50,36 +50,49 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const onAuthChange = () => setAuthed(!!getToken());
-    window.addEventListener("storage", onAuthChange);
+    window.addEventListener('storage', onAuthChange);
     window.addEventListener(AUTH_EVENT, onAuthChange);
     return () => {
-      window.removeEventListener("storage", onAuthChange);
+      window.removeEventListener('storage', onAuthChange);
       window.removeEventListener(AUTH_EVENT, onAuthChange);
     };
   }, []);
 
-  useEffect(() => {
-    let alive = true;
-    (async () => {
-      setLoading(true);
-      try {
-        if (authed) {
-          const favs = await favoritesService.list();
-          if (alive) setFavorites(favs);
-        } else {
-          setFavorites(readGuestFavorites());
-        }
-      } catch (err) {
-        console.error("Erreur chargement favoris:", err);
-        if (alive) setFavorites(readGuestFavorites());
-      } finally {
-        if (alive) setLoading(false);
+useEffect(() => {
+  let alive = true;
+
+  (async () => {
+    setLoading(true);
+    try {
+      const token = getToken();
+      console.log('[FavoritesContext] Token actuel:', token);
+
+      if (token) {
+        writeGuestFavorites([]);
+
+        const favs = await favoritesService.list();
+        console.log('[FavoritesContext] Favoris backend:', favs);
+
+        if (alive) setFavorites(favs);
+      } else {
+        const localFavs = readGuestFavorites();
+        console.log('[FavoritesContext]  Favoris invités:', localFavs);
+
+        if (alive) setFavorites(localFavs);
       }
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [authed]);
+    } catch (err) {
+      console.error('Erreur chargement favoris:', err);
+      if (alive) setFavorites(readGuestFavorites());
+    } finally {
+      if (alive) setLoading(false);
+    }
+  })();
+
+  return () => {
+    alive = false;
+  };
+}, []); 
+
 
   const addFavorite = async (product: Product) => {
     if (authed) {
@@ -90,7 +103,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
           return [...prev, product];
         });
       } catch (e) {
-        console.error("Erreur addFavorite:", e);
+        console.error('Erreur addFavorite:', e);
       }
       return;
     }
@@ -107,7 +120,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       try {
         await favoritesService.remove(productId);
       } catch (e) {
-        console.error("Erreur removeFavorite:", e);
+        console.error('Erreur removeFavorite:', e);
       }
     }
     setFavorites((prev) => {
@@ -133,7 +146,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
           await favoritesService.remove(f.id);
         }
       } catch (e) {
-        console.error("Erreur clearFavorites:", e);
+        console.error('Erreur clearFavorites:', e);
       }
     }
     setFavorites([]);
@@ -165,6 +178,6 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 export const useFavorites = () => {
   const ctx = useContext(FavoritesContext);
   if (!ctx)
-    throw new Error("useFavorites must be used within a FavoritesProvider");
+    throw new Error('useFavorites must be used within a FavoritesProvider');
   return ctx;
 };
